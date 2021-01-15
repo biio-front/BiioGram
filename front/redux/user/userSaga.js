@@ -1,4 +1,5 @@
-import { all, delay, fork, put, takeLatest } from 'redux-saga/effects';
+import axios from 'axios';
+import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects';
 import { editProfileToPost } from '../post/postSlice';
 import {
   loginFail,
@@ -21,30 +22,39 @@ import {
   removeFollowFail,
 } from './userSlice';
 
+function loginAPI(data) {
+  return axios.post('/user/login', data);
+}
 function* login({ payload }) {
   try {
-    yield delay(1000);
-    yield put(loginSuccess(payload));
+    const result = yield call(loginAPI, payload);
+    yield put(loginSuccess(result));
   } catch (err) {
     console.log(err);
     yield put(loginFail(err));
   }
 }
 
+function logoutAPI() {
+  return axios.delete('/user/logout');
+}
 function* logout() {
   try {
-    yield delay(1000);
-    yield put(logoutSuccess());
+    const result = yield call(logoutAPI);
+    yield put(logoutSuccess(result));
   } catch (err) {
     console.log(err);
     yield put(logoutFail(err));
   }
 }
 
+function signUpAPI(data) {
+  return axios.post('/user/signup', data);
+}
 function* signUp({ payload }) {
   try {
-    yield delay(1000);
-    yield put(signUpSuccess(payload));
+    const result = yield call(signUpAPI, payload);
+    yield put(signUpSuccess(result));
   } catch (err) {
     console.log(err);
     yield put(signUpFail(err));

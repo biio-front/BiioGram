@@ -4,17 +4,18 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, Input } from 'semantic-ui-react';
 import styled from 'styled-components';
-import AuthCard from '../components/auth/authCard';
+import AuthCard from '../components/auth/AuthCard';
 import AuthLinkCard from '../components/auth/AuthLinkCard';
-import { dummyUser, signUpRequest } from '../redux/user/userSlice';
+import { signUpRequest } from '../redux/user/userSlice';
 import { useInput } from '../hooks/useInput';
 
 const SignUp = () => {
-  const { currentUser, signUpLoading } = useSelector((state) => state.user);
+  const { currentUser, signUpLoading, signUpDone, signUpError } = useSelector(
+    (state) => state.user,
+  );
   const dispatch = useDispatch();
 
   const [email, onChangeEmail] = useInput('');
-  const [emailError, setEmailError] = useState(false);
   const [nickname, onChangeNickname] = useInput('');
   const [password, onChangePassword] = useInput('');
   const [passwordCheck, onChangePasswordCheck] = useInput('');
@@ -23,8 +24,12 @@ const SignUp = () => {
   const [termError, setTermError] = useState(false);
 
   useEffect(() => {
-    currentUser && Router.push('/');
+    currentUser && Router.replace('/');
   }, [currentUser]);
+
+  useEffect(() => {
+    signUpDone && Router.replace('/');
+  }, [signUpDone]);
 
   const onChangeTerm = useCallback((e) => {
     setTerm(e.target.checked);
@@ -32,12 +37,6 @@ const SignUp = () => {
   }, []);
 
   const onSubmit = useCallback(() => {
-    const exUser = dummyUser.find((v) => v.email === email);
-    if (exUser) {
-      return setEmailError(true);
-    } else {
-      setEmailError(false);
-    }
     if (password !== passwordCheck) {
       return setPasswordError(true);
     } else {
@@ -57,7 +56,7 @@ const SignUp = () => {
         <h4>이메일로 가입하기</h4>
         <Form onSubmit={onSubmit}>
           <Input type="email" placeholder={'이메일'} onChange={onChangeEmail} autoFocus />
-          {emailError && <s.Error>이미 사용중인 이메일입니다.</s.Error>}
+          {signUpError && <s.Error>이미 사용중인 이메일입니다.</s.Error>}
           <Input
             type="text"
             placeholder={'사용자이름'}
@@ -95,7 +94,7 @@ const SignUp = () => {
         </Form>
       </AuthCard>
       <AuthLinkCard query="계정이 있으신가요?">
-        <Link to="/auth">로그인하기</Link>
+        <Link href="/auth">로그인하기</Link>
       </AuthLinkCard>
     </>
   );

@@ -1,46 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const dummyUser = [
-  {
-    id: 1,
-    email: 'ss@ss.ss',
-    password: 'ssssss',
-    nickname: '비오',
-    desc: '',
-    avatar: '',
-    Posts: [
-      {
-        id: 1,
-        Images: [
-          {
-            id: 1,
-            src:
-              'https://firebasestorage.googleapis.com/v0/b/haggendazs.appspot.com/o/BiioGram%2F_12285646.JPG?alt=media&token=ecad8e06-3d29-4e6e-a169-f582bc25ea66',
-          },
-        ],
-        Comments: [
-          {
-            id: 1,
-          },
-          {
-            id: 2,
-          },
-        ],
-        Likers: [
-          {
-            id: 2,
-          },
-        ],
-      },
-    ],
-    Followers: [
-      { id: 2, nickname: '사과맛' },
-      { id: 3, nickname: 'black02' },
-    ],
-    Followings: [{ id: 2, nickname: '사과맛' }],
-  },
-];
-
 export const initialState = {
   loginLoading: false,
   loginDone: false,
@@ -60,7 +19,7 @@ export const initialState = {
   removeFollowLoading: false,
   removeFollowDone: false,
   removeFollowError: null,
-  currentUser: dummyUser[0],
+  currentUser: null,
 };
 const slice = createSlice({
   name: 'user',
@@ -71,10 +30,10 @@ const slice = createSlice({
       state.loginDone = false;
       state.loginError = null;
     },
-    loginSuccess(state, { payload: email }) {
+    loginSuccess(state, { user, email }) {
       state.loginLoading = false;
       state.loginDone = true;
-      state.currentUser = dummyUser.find((v) => v.email === email);
+      state.currentUser = user.find((v) => v.email === email);
     },
     loginFail(state, { payload: error }) {
       console.log(error);
@@ -100,12 +59,9 @@ const slice = createSlice({
       state.signUpDone = false;
       state.signUpError = null;
     },
-    signUpSuccess(state, { payload }) {
-      const addedUser = { ...payload };
+    signUpSuccess(state) {
       state.signUpLoading = false;
       state.signUpDone = true;
-      state.currentUser = addedUser;
-      dummyUser.push(addedUser);
     },
     signUpFail(state, { payload: error }) {
       state.signUpLoading = false;

@@ -1,13 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import faker from 'faker';
-import { dummyUser } from '../user/userSlice';
 
 export const dummyPost = {
   id: 1,
   User: {
-    id: dummyUser[0].id,
-    nickname: dummyUser[0].nickname,
-    avatar: dummyUser[0].avatar,
+    id: 1000,
+    nickname: 'dummy',
+    avatar: null,
   },
   Images: [
     {

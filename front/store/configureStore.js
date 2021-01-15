@@ -1,22 +1,10 @@
 import { createWrapper } from 'next-redux-wrapper';
 import createSagaMiddleware from 'redux-saga';
 import { configureStore } from '@reduxjs/toolkit';
+import rootSaga from '../redux/rootSaga';
+import rootReducer from '../redux/rootReducer';
 
-import { combineReducers } from 'redux';
-import user from '../redux/user/userSlice';
-import post from '../redux/post/postSlice';
-
-import { all } from 'redux-saga/effects';
-import userSaga from '../redux/user/userSaga';
-import postSaga from '../redux/post/postSaga';
-
-const rootReducer = combineReducers({ user, post });
-
-function* rootSaga() {
-  yield all([userSaga(), postSaga()]);
-}
-
-const Store = () => {
+const store = () => {
   const sagaMiddleware = createSagaMiddleware();
   const store = configureStore({
     reducer: rootReducer,
@@ -28,7 +16,7 @@ const Store = () => {
   return store;
 };
 
-const wrapper = createWrapper(Store, {
+const wrapper = createWrapper(store, {
   debug: process.env.NODE_ENV === 'development',
 });
 

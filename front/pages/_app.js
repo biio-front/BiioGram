@@ -1,5 +1,4 @@
 import React from 'react';
-import withReduxSaga from 'next-redux-saga';
 import wrapper from '../store/configureStore';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
@@ -23,4 +22,4 @@ BiioGram.propTypes = {
   Component: PropTypes.elementType.isRequired,
 };
 
-export default wrapper.withRedux(withReduxSaga(BiioGram));
+export default wrapper.withRedux(BiioGram);

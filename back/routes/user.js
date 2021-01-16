@@ -1,34 +1,38 @@
+const { User, Post } = require('../models');
 const express = require('express');
-const { User } = require('../models');
-const bcrypt = require('bcrypt');
-const passport = require('passport');
 const router = express.Router();
 
-router.post('/signup', async(req, res, next) => { // POST /user/signup
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
+
+const bcrypt = require('bcrypt');
+const dotenv = require('dotenv');
+dotenv.config();
+
+router.post('/signup', async (req, res, next) => { // POST /user/signup
+  const { email, nickname, password } = req.body;
   try {
     const exUser = await User.findOne({
-      where: {
-        email: req.body.email,
-      }
+      where: { email }
     });
     if (exUser) {
       return res.status(403).send('이미 사용 중인 이메일입니다.');
     }
-    const hashedPassword = await bcrypt.hash(req.body.password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
     await User.create({
-      email: req.body.email,
-      nickname: req.body.nickname,
+      email: email,
+      nickname: nickname,
       password: hashedPassword,
     });
-    res.status(201).send('ok');
+    res.status(201).send('회원가입 되었습니다.');
   } catch (error) {
     console.error(error);
     next(error);
   }
 });
 
-router.post('/login', async(req, res, next) => { // POST /user/login
-  passport.authenticate('local', (error, user, errorInfo) => {
+router.post('/login', async (req, res, next) => { // POST /user/login
+  passport.authenticate('local', { sessions: false }, (error, user, errorInfo) => {
     if (error) {
       console.error(error);
       return next(error);
@@ -37,14 +41,45 @@ router.post('/login', async(req, res, next) => { // POST /user/login
       console.error(errorInfo);
       return res.status(401).send(errorInfo.reason);
     }
-    return req.login(user, async (loginError) => {
+    return req.login(user, { sessions: false }, async (loginError) => {
       if (loginError) {
         console.error(loginError);
         return next(loginError);
       }
-      return res.status(200).json(user);
+      const { id } = req.user;
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id },
+        attributes: {
+          exclude: ['password']
+        },
+      });
+      const refreshToken = jwt.sign(
+        {},
+        process.env.JWT_SECRET,
+        { expiresIn: '14d' },
+      );
+      // DB에 refreshToken 저장...?
+      const accessToken = jwt.sign(
+        { id: user.id }, 
+        process.env.JWT_SECRET, 
+        { expiresIn: '5m' },
+      );
+      // res.cookie('RefreshToken', refreshToken, { httpOnly: true })
+      return res.status(200).json({ me: fullUserWithoutPassword, token: accessToken });
     });
   })(req, res, next);
+});
+
+router.get('/myInfo', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    const fullUserWithoutPassword = await User.findOne({
+
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
 });
 
 module.exports = router;

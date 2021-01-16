@@ -30,10 +30,17 @@ const slice = createSlice({
       state.loginDone = false;
       state.loginError = null;
     },
-    loginSuccess(state, { user, email }) {
+    loginSuccess(state, { id, email, nickname }) {
       state.loginLoading = false;
       state.loginDone = true;
-      state.currentUser = user.find((v) => v.email === email);
+      state.currentUser = {
+        id,
+        email,
+        nickname,
+        avatar: null,
+        Followers: [],
+        Followings: [],
+      };
     },
     loginFail(state, { payload: error }) {
       console.log(error);

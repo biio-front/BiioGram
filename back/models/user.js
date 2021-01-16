@@ -17,6 +17,9 @@ module.exports = class User extends Model {
       password: {
         type: DataTypes.STRING(100),
         allowNull: false,
+      },
+      avatar: {
+        type: DataTypes.STRING(500),
       }
     }, {
       modelName: 'User',

@@ -14,7 +14,7 @@ const Auth = () => {
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const onSubmit = useCallback(() => {
-    dispatch(loginRequest(email));
+    dispatch(loginRequest({ email, password }));
   }, [email, password]);
 
   return (

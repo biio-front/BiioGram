@@ -28,7 +28,8 @@ function loginAPI(data) {
 function* login({ payload }) {
   try {
     const result = yield call(loginAPI, payload);
-    yield put(loginSuccess(result));
+    console.log(result.data.me);
+    yield put(loginSuccess(result.data.me));
   } catch (err) {
     console.log(err);
     yield put(loginFail(err));

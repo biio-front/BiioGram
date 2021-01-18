@@ -1,6 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export const initialState = {
+  loadMyInfoLoading: false,
+  loadMyInfoDone: false,
+  loadMyInfoError: null,
   loginLoading: false,
   loginDone: false,
   loginError: null,
@@ -19,27 +22,55 @@ export const initialState = {
   removeFollowLoading: false,
   removeFollowDone: false,
   removeFollowError: null,
-  currentUser: null,
+  me: null,
 };
 const slice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    loadMyInfoRequest(state) {
+      state.loadMyInfoLoading = true;
+      state.loadMyInfoDone = false;
+      state.loadMyInfoError = null;
+    },
+    loadMyInfoSuccess(
+      state,
+      { payload: { id, email, nickname, avatar, Followers, Followings } },
+    ) {
+      state.loadMyInfoLoading = false;
+      state.loadMyInfoDone = true;
+      state.me = {
+        id,
+        email,
+        nickname,
+        avatar,
+        Followings,
+        Followers,
+      };
+    },
+    loadMyInfoFail(state, { payload: error }) {
+      console.log(error);
+      state.loadMyInfoLoading = false;
+      state.loadMyInfoError = error;
+    },
     loginRequest(state) {
       state.loginLoading = true;
       state.loginDone = false;
       state.loginError = null;
     },
-    loginSuccess(state, { id, email, nickname }) {
+    loginSuccess(
+      state,
+      { payload: { id, email, nickname, avatar, Followers, Followings } },
+    ) {
       state.loginLoading = false;
       state.loginDone = true;
-      state.currentUser = {
+      state.me = {
         id,
         email,
         nickname,
-        avatar: null,
-        Followers: [],
-        Followings: [],
+        avatar,
+        Followings,
+        Followers,
       };
     },
     loginFail(state, { payload: error }) {
@@ -55,7 +86,7 @@ const slice = createSlice({
     logoutSuccess(state) {
       state.logoutLoading = false;
       state.logoutDone = true;
-      state.currentUser = null;
+      state.me = null;
     },
     logoutFail(state, { payload: error }) {
       state.logoutLoading = false;
@@ -82,9 +113,9 @@ const slice = createSlice({
     editProfileSuccess(state, { payload: { src, nickname, desc } }) {
       state.editProfileLoading = false;
       state.editProfileDone = true;
-      state.currentUser.avatar = src;
-      state.currentUser.nickname = nickname;
-      state.currentUser.desc = desc;
+      state.me.avatar = src;
+      state.me.nickname = nickname;
+      state.me.desc = desc;
     },
     editProfileFail(state, { payload: error }) {
       state.editProfileLoading = false;
@@ -98,7 +129,7 @@ const slice = createSlice({
     addFollowSuccess(state, { payload: { userId, nickname } }) {
       state.addFollowLoading = false;
       state.addFollowDone = true;
-      state.currentUser.Followings.push({ id: userId, nickname });
+      state.me.Followings.push({ id: userId, nickname });
     },
     addFollowFail(state, { payload: error }) {
       console.log(error);
@@ -113,7 +144,7 @@ const slice = createSlice({
     removeFollowSuccess(state, { payload: userId }) {
       state.removeFollowLoading = false;
       state.removeFollowDone = true;
-      const me = state.currentUser;
+      const me = state.me;
       me.Followings = me.Followings.filter((v) => v.id !== userId);
     },
     removeFollowFail(state, { payload: error }) {
@@ -122,7 +153,7 @@ const slice = createSlice({
       state.removeFollowError = error;
     },
     addPostToMe(state, { payload: { images, newId } }) {
-      state.currentUser.Posts.unshift({
+      state.me.Posts.unshift({
         id: newId,
         Images: { ...images },
         Comments: [],
@@ -130,18 +161,18 @@ const slice = createSlice({
       });
     },
     updatePostToMe(state, { payload: { images, postId } }) {
-      const post = state.currentUser.Posts.find((v) => v.id === postId);
+      const post = state.me.Posts.find((v) => v.id === postId);
       post.Images = [...images];
     },
     removePostToMe(state, { payload }) {
-      state.currentUser.Posts = state.currentUser.Posts.filter((v) => v.id !== payload);
+      state.me.Posts = state.me.Posts.filter((v) => v.id !== payload);
     },
     addCommentToMe(state, { payload: { postId } }) {
-      const post = state.currentUser.Posts.find((v) => v.id === postId);
+      const post = state.me.Posts.find((v) => v.id === postId);
       post.Comments.push({ id: post.Comments.length + 1 });
     },
     removeCommentToMe(state, { payload: { postId, commentId } }) {
-      const post = state.currentUser.Posts.find((v) => v.id === postId);
+      const post = state.me.Posts.find((v) => v.id === postId);
       post.Comments = post.Comments.filter((v) => v.id !== commentId);
     },
   },
@@ -149,6 +180,9 @@ const slice = createSlice({
 
 export default slice.reducer;
 export const {
+  loadMyInfoRequest,
+  loadMyInfoSuccess,
+  loadMyInfoFail,
   loginRequest,
   loginSuccess,
   loginFail,

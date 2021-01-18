@@ -6,7 +6,7 @@ import { removeCommentRequest } from '../../redux/post/postSlice';
 import PropTypes from 'prop-types';
 
 const CommentList = ({ nickname, content, userId, commentId, postId }) => {
-  const { currentUser } = useSelector((state) => state.user);
+  const { me } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const onRemove = useCallback(
@@ -35,7 +35,7 @@ const CommentList = ({ nickname, content, userId, commentId, postId }) => {
           </List.Header>
           <p>{content}</p>
         </List.Content>
-        {userId === currentUser.id && (
+        {userId === me.id && (
           <s.remove floated="right" onClick={onRemove}>
             <List.Icon name="delete" color="red" />
           </s.remove>

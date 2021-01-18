@@ -10,17 +10,17 @@ import useUploadImages from '../../hooks/useUploadImages';
 import ProfileHead from '../../components/profile/profileHead';
 
 const EditProfile = () => {
-  const { currentUser, editProfileLoading } = useSelector((state) => state.user);
+  const { me, editProfileLoading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const [images, onFileChange, imageInput, onImageUpload] = useUploadImages();
-  const [nickname, onChangeNickname] = useInput(currentUser.nickname);
-  const [desc, onChangeDesc] = useInput(currentUser.desc);
+  const [nickname, onChangeNickname] = useInput(me.nickname);
+  const [desc, onChangeDesc] = useInput(me.desc);
 
   const onSubmit = useCallback(() => {
     let src = null;
     if (images) src = images[0]?.src;
-    const userId = currentUser.id;
+    const userId = me.id;
     dispatch(editProfileRequest({ src, nickname, desc, userId }));
     Router.push('/profile');
   }, [images, nickname, desc]);
@@ -28,10 +28,7 @@ const EditProfile = () => {
   return (
     <AppLayout>
       <s.article>
-        <ProfileHead
-          avatar={images ? images[0]?.src : currentUser.avatar}
-          nickname={nickname}
-        >
+        <ProfileHead avatar={images ? images[0]?.src : me.avatar} nickname={nickname}>
           <input
             type="file"
             accept="image/*"
@@ -40,7 +37,7 @@ const EditProfile = () => {
             onChange={onFileChange}
           />
           <div>
-            <p>{currentUser.email}</p>
+            <p>{me.email}</p>
             <s.changeAvatar onClick={onImageUpload}>프로필 사진 바꾸기</s.changeAvatar>
           </div>
         </ProfileHead>

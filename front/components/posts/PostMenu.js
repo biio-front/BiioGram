@@ -12,7 +12,7 @@ const PostMenu = ({ userId, postId, nickname }) => {
   const {
     addFollowLoading,
     removeFollowLoading,
-    currentUser: { id, Followings },
+    me: { id, Followings },
   } = useSelector((state) => state.user);
   const { removePostLoading } = useSelector((state) => state.post);
   const dispatch = useDispatch();

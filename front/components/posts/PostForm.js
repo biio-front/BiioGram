@@ -12,7 +12,7 @@ import Router from 'next/router';
 
 const PostForm = ({ post }) => {
   const { addPostLoading, addPostDone } = useSelector((state) => state.post);
-  const { currentUser } = useSelector((state) => state.user);
+  const { me } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const [images, onFileChange, imageInput, onImageUpload] = useUploadImages(post?.Images);
@@ -28,7 +28,7 @@ const PostForm = ({ post }) => {
   const onSubmit = useCallback(() => {
     post
       ? dispatch(updatePostRequest({ images, text, postId: post.id }))
-      : dispatch(addPostRequest({ images, text, currentUser }));
+      : dispatch(addPostRequest({ images, text, me }));
     Router.push('/');
   }, [text]);
 

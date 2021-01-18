@@ -4,8 +4,8 @@ import Home from '../components/posts/Home';
 import Auth from './auth';
 
 const App = () => {
-  const { currentUser } = useSelector((state) => state.user);
-  return <>{currentUser ? <Home /> : <Auth />}</>;
+  const { me } = useSelector((state) => state.user);
+  return <>{me ? <Home /> : <Auth />}</>;
 };
 
 export default App;

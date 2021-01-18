@@ -122,15 +122,15 @@ const slice = createSlice({
       state.addPostDone = false;
       state.addPostError = null;
     },
-    addPostSuccess(state, { payload: { images, text, currentUser, newId } }) {
+    addPostSuccess(state, { payload: { images, text, me, newId } }) {
       state.addPostLoading = false;
       state.addPostDone = true;
       state.mainPosts.unshift({
         id: newId,
         User: {
-          id: currentUser.id,
-          nickname: currentUser.nickname,
-          avatar: currentUser.avatar,
+          id: me.id,
+          nickname: me.nickname,
+          avatar: me.avatar,
         },
         Images: [...images],
         content: text,
@@ -185,16 +185,16 @@ const slice = createSlice({
       state.addCommentDone = false;
       state.addCommentError = null;
     },
-    addCommentSuccess(state, { payload: { postId, currentUser, text } }) {
+    addCommentSuccess(state, { payload: { postId, me, text } }) {
       state.addCommentLoading = false;
       state.addCommentDone = true;
       const post = state.mainPosts.find((v) => v.id === postId);
       post.Comments.push({
         id: post.Comments.length + 1,
         User: {
-          id: currentUser.id,
-          nickname: currentUser.nickname,
-          avatar: currentUser.avatar,
+          id: me.id,
+          nickname: me.nickname,
+          avatar: me.avatar,
         },
         content: text,
       });
@@ -225,14 +225,14 @@ const slice = createSlice({
       state.addLikersDone = false;
       state.addLikersError = null;
     },
-    addLikersSuccess(state, { payload: { postId, currentUser } }) {
+    addLikersSuccess(state, { payload: { postId, me } }) {
       state.addLikersLoading = false;
       state.addLikersDone = true;
       const post = state.mainPosts.find((v) => v.id === postId);
       post.Likers.push({
-        id: currentUser.id,
-        nickname: currentUser.nickname,
-        avatar: currentUser.avatar,
+        id: me.id,
+        nickname: me.nickname,
+        avatar: me.avatar,
       });
     },
     addLikersFail(state, { payload: error }) {
@@ -245,11 +245,11 @@ const slice = createSlice({
       state.removeLikersDone = false;
       state.removeLikersError = null;
     },
-    removeLikersSuccess(state, { payload: { postId, currentUser } }) {
+    removeLikersSuccess(state, { payload: { postId, me } }) {
       state.removeLikersLoading = false;
       state.removeLikersDone = true;
       const post = state.mainPosts.find((v) => v.id === postId);
-      post.Likers = post.Likers.filter((v) => v.id !== currentUser.id);
+      post.Likers = post.Likers.filter((v) => v.id !== me.id);
     },
     removeLikersFail(state, { payload: error }) {
       console.log(error);

@@ -1,14 +1,18 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadMyInfoRequest } from '../../redux/user/userSlice';
 import AppLayout from '../layout/AppLayout';
 import PostCard from './PostCard';
 
 const Home = () => {
   const { mainPosts } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
 
+  const onClick = useCallback(() => dispatch(loadMyInfoRequest()), []);
   return (
     <>
       <AppLayout>
+        <button onClick={onClick}>Load My Info</button>
         {mainPosts.map((v) => (
           <PostCard
             key={v.id}

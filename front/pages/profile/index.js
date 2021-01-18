@@ -1,16 +1,36 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Grid, List } from 'semantic-ui-react';
 import styled from 'styled-components';
+// import useSWR from 'swr';
 import AppLayout from '../../components/layout/AppLayout';
 import PostImg from '../../components/profile/PostImg';
 import ListModal from '../../components/common/ListModal';
 import ProfileHead from '../../components/profile/profileHead';
+import { loadMyInfoRequest } from '../../redux/user/userSlice';
+// import axios from 'axios';
+
+// const fetcher = url => axios.get(url, { withCredentials: true }).then(result => result.data);
 
 const Profile = () => {
   const { nickname, Posts, Followers, Followings, desc, avatar } = useSelector(
-    (state) => state.user.currentUser,
+    (state) => state.user.me,
   );
+  const dispatch = useDispatch();
+
+  useEffect(() => dispatch(loadMyInfoRequest()), []);
+  // const { data: userPosts, error: userPostsError } = useSWR(
+  //   `http://localhost:3055/user/${userId}/posts`,
+  //   fetcher,
+  // );
+  // const { data: followingsData, error: followingsError } = useSWR(
+  //   `http://localhost:3055/user/followings`,
+  //   fetcher,
+  // );
+  // const { data: followersData, error: followerError } = useSWR(
+  //   `http://localhost:3055/user/followers`,
+  //   fetcher,
+  // );
 
   return (
     <>

@@ -1,4 +1,4 @@
-const { User, Post } = require('../models');
+const { User } = require('../models');
 const express = require('express');
 const router = express.Router();
 
@@ -52,6 +52,15 @@ router.post('/login', async (req, res, next) => { // POST /user/login
         attributes: {
           exclude: ['password']
         },
+        include: [{
+          model: User,
+          as: 'Followings',
+          attributes: ['id'],
+        }, {
+          model: User,
+          as: 'Followers',
+          attributes: ['id'],
+        }]
       });
       const refreshToken = jwt.sign(
         {},
@@ -64,18 +73,31 @@ router.post('/login', async (req, res, next) => { // POST /user/login
         process.env.JWT_SECRET, 
         { expiresIn: '5m' },
       );
-      // res.cookie('RefreshToken', refreshToken, { httpOnly: true })
+      res.cookie('RefreshToken', refreshToken, { httpOnly: true })
       return res.status(200).json({ me: fullUserWithoutPassword, token: accessToken });
     });
   })(req, res, next);
 });
 
-router.get('/myInfo', passport.authenticate('jwt', { session: false }), async (req, res, next) => {
+router.get('/', passport.authenticate('jwt', { session: false }), async (req, res, next) => { // GET /user
   try {
     const { id } = req.user;
     const fullUserWithoutPassword = await User.findOne({
-
+      where: { id },
+      attributes: {
+        exclude: ['password']
+      },
+      include: [{
+        model: User,
+        as: 'Followings',
+        attributes: ['id'],
+      }, {
+        model: User,
+        as: 'Followers',
+        attributes: ['id'],
+      }]
     });
+    res.json(fullUserWithoutPassword);
   } catch (error) {
     console.error(error);
     next(error);

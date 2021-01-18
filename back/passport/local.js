@@ -35,7 +35,6 @@ const JWTConfig = {
 };
 const JWTVerify = async (payload, done) => {
   try {
-    console.log(payload);
     const user = await User.findOne({
       where: { id: payload.id }
     });

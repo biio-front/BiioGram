@@ -8,7 +8,7 @@ import { useInput } from '../../hooks/useInput';
 import PropTypes from 'prop-types';
 
 const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
-  const { currentUser } = useSelector((state) => state.user);
+  const { me } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [newComment, setNewComment] = useState(null);
   const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
   }, []);
 
   const onSubmit = useCallback(() => {
-    dispatch(addCommentRequest({ postId, currentUser, text }));
+    dispatch(addCommentRequest({ postId, me, text }));
     setNewComment(text);
     setText('');
   }, [text]);
@@ -57,8 +57,8 @@ const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
           <CommentList
             postId={postId}
             commentId={comments.length + 1}
-            userId={currentUser.id}
-            nickname={currentUser.nickname}
+            userId={me.id}
+            nickname={me.nickname}
             content={newComment}
           />
         </List>

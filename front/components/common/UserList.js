@@ -7,7 +7,7 @@ import { addFollowRequest, removeFollowRequest } from '../../redux/user/userSlic
 
 const UserList = ({ nickname, userId }) => {
   const {
-    currentUser: { Followings },
+    me: { Followings },
   } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 

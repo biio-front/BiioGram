@@ -10,7 +10,7 @@ import { signUpRequest } from '../redux/user/userSlice';
 import { useInput } from '../hooks/useInput';
 
 const SignUp = () => {
-  const { currentUser, signUpLoading, signUpDone, signUpError } = useSelector(
+  const { me, signUpLoading, signUpDone, signUpError } = useSelector(
     (state) => state.user,
   );
   const dispatch = useDispatch();
@@ -24,8 +24,8 @@ const SignUp = () => {
   const [termError, setTermError] = useState(false);
 
   useEffect(() => {
-    currentUser && Router.replace('/');
-  }, [currentUser]);
+    me && Router.replace('/');
+  }, [me]);
 
   useEffect(() => {
     signUpDone && Router.replace('/');

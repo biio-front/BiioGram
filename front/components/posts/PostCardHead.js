@@ -8,7 +8,7 @@ import PostMenu from './PostMenu';
 import PropTypes from 'prop-types';
 
 const PostCardHead = ({ userId, nickname, avatar, postId }) => {
-  const { id, Followings } = useSelector((state) => state.user.currentUser);
+  const { id, Followings } = useSelector((state) => state.user.me);
   const dispatch = useDispatch();
 
   const [openMenu, setOpenMenu] = useState(false);

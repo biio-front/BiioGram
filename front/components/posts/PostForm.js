@@ -11,27 +11,24 @@ import Slider from './Slider';
 import Router from 'next/router';
 
 const PostForm = ({ post }) => {
-  const { addPostLoading, addPostDone } = useSelector((state) => state.post);
-  const { me } = useSelector((state) => state.user);
+  const { addPostLoading, addPostDone, imagePaths } = useSelector((state) => state.post);
+  // const { id: userId } = useSelector((state) => state.user.me);
   const dispatch = useDispatch();
 
-  const [images, onFileChange, imageInput, onImageUpload] = useUploadImages(post?.Images);
+  const [onFileChange, imageInput, onImageUpload] = useUploadImages();
   const [text, onChangeText, setText] = useInput(post?.content);
 
-  console.log(post);
-  console.log(post.Images);
-  console.log(images);
   useEffect(() => {
     addPostDone && setText('');
   }, [addPostDone]);
 
   const onSubmit = useCallback(() => {
     post
-      ? dispatch(updatePostRequest({ images, text, postId: post.id }))
-      : dispatch(addPostRequest({ images, text, me }));
+      ? dispatch(updatePostRequest({ content: text, image: imagePaths, postId: post.id }))
+      : dispatch(addPostRequest({ content: text, image: imagePaths }));
     Router.push('/');
   }, [text]);
-
+  imagePaths && console.log(imagePaths);
   return (
     <>
       <AppLayout>
@@ -46,12 +43,12 @@ const PostForm = ({ post }) => {
               onChange={onFileChange}
             />
             <s.imageUpload>
-              {images ? (
+              {imagePaths ? (
                 <>
                   <p className="changeImg" onClick={onImageUpload}>
                     사진 바꾸기
                   </p>
-                  <Slider Images={images} />
+                  <Slider Images={imagePaths} />
                 </>
               ) : (
                 <div className="addImg" onClick={onImageUpload}>

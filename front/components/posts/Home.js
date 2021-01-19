@@ -1,18 +1,17 @@
-import React, { useCallback } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadMyInfoRequest } from '../../redux/user/userSlice';
+import { loadPostsRequest } from '../../redux/post/postSlice';
 import AppLayout from '../layout/AppLayout';
 import PostCard from './PostCard';
 
 const Home = () => {
   const { mainPosts } = useSelector((state) => state.post);
   const dispatch = useDispatch();
+  useEffect(() => dispatch(loadPostsRequest()), []);
 
-  const onClick = useCallback(() => dispatch(loadMyInfoRequest()), []);
   return (
-    <>
+    <div>
       <AppLayout>
-        <button onClick={onClick}>Load My Info</button>
         {mainPosts.map((v) => (
           <PostCard
             key={v.id}
@@ -25,7 +24,7 @@ const Home = () => {
           />
         ))}
       </AppLayout>
-    </>
+    </div>
   );
 };
 

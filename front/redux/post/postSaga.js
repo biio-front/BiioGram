@@ -1,4 +1,5 @@
-import { all, delay, fork, put, takeLatest } from 'redux-saga/effects';
+import axios from 'axios';
+import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects';
 import {
   addCommentRequest,
   addCommentSuccess,
@@ -21,20 +22,50 @@ import {
   updatePostRequest,
   updatePostSuccess,
   updatePostFail,
+  uploadImagesRequest,
+  uploadImagesSuccess,
+  uploadImagesFail,
+  loadPostsRequest,
+  loadPostsSuccess,
+  loadPostsFail,
 } from './postSlice';
-import {
-  addCommentToMe,
-  addPostToMe,
-  removeCommentToMe,
-  removePostToMe,
-} from '../user/userSlice';
+import { addCommentToMe, addPostToMe, removeCommentToMe } from '../user/userSlice';
 
+function loadPostsAPI() {
+  return axios.get('/posts');
+}
+function* loadPosts() {
+  try {
+    const result = yield call(loadPostsAPI);
+    yield put(loadPostsSuccess(result.data));
+  } catch (err) {
+    console.log(err);
+    yield put(loadPostsFail(err));
+  }
+}
+
+function uploadImagesAPI(data) {
+  return axios.post('/post/images', data);
+}
+function* uploadImages({ payload }) {
+  try {
+    const result = yield call(uploadImagesAPI, payload);
+    yield put(uploadImagesSuccess(result.data));
+  } catch (err) {
+    console.log(err);
+    yield put(uploadImagesFail(err));
+  }
+}
+
+function addPostAPI(data) {
+  return axios.post('/post', data);
+}
 function* addPost({ payload }) {
   try {
-    yield delay(1000);
-    const newId = Date.now();
-    yield put(addPostSuccess({ ...payload, newId }));
-    yield put(addPostToMe({ ...payload, newId }));
+    const result = yield call(addPostAPI, payload);
+    console.log(result.data);
+    yield put(addPostSuccess(result.data));
+    // yield put(addPostToMe({ ...payload }));
   } catch (err) {
     console.log(err);
     yield put(addPostFail(err));
@@ -52,11 +83,13 @@ function* updatePost({ payload }) {
   }
 }
 
+function removePostAPI(data) {
+  return axios.delete(`/post/${data}`); // DELET /post/postId
+}
 function* removePost({ payload }) {
   try {
-    yield delay(1000);
-    yield put(removePostSuccess(payload));
-    yield put(removePostToMe(payload));
+    const result = yield call(removePostAPI, payload);
+    yield put(removePostSuccess(result.data));
   } catch (err) {
     console.log(err);
     yield put(removePostFail(err));
@@ -103,6 +136,12 @@ function* removeLikers({ payload }) {
   }
 }
 
+export function* watchLoadPosts() {
+  yield takeLatest(loadPostsRequest, loadPosts);
+}
+export function* watchUploadImages() {
+  yield takeLatest(uploadImagesRequest, uploadImages);
+}
 export function* watchAddPost() {
   yield takeLatest(addPostRequest, addPost);
 }
@@ -127,6 +166,8 @@ export function* watchRemoveLikers() {
 
 export default function* postSaga() {
   yield all([
+    fork(watchLoadPosts),
+    fork(watchUploadImages),
     fork(watchAddPost),
     fork(watchUpdatePost),
     fork(watchremovePost),

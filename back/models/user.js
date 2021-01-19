@@ -20,12 +20,15 @@ module.exports = class User extends Model {
       },
       avatar: {
         type: DataTypes.STRING(500),
+      },
+      desc: {
+        type: DataTypes.TEXT,
       }
     }, {
       modelName: 'User',
       tableName: 'users',
-      charset: 'utf8',
-      collate: 'utf8_general_ci',
+      charset: 'utf8mb4',
+      collate: 'utf8mb4_general_ci',
       sequelize,
     });
   }

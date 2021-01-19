@@ -22,8 +22,8 @@ const EditProfile = () => {
     if (images) src = images[0]?.src;
     const userId = me.id;
     dispatch(editProfileRequest({ src, nickname, desc, userId }));
-    Router.push('/profile');
   }, [images, nickname, desc]);
+  Router.push('/profile');
 
   return (
     <AppLayout>

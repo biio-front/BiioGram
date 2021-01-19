@@ -35,7 +35,7 @@ const slice = createSlice({
     },
     loadMyInfoSuccess(
       state,
-      { payload: { id, email, nickname, avatar, Followers, Followings } },
+      { payload: { id, email, nickname, avatar, desc, Followers, Followings } },
     ) {
       state.loadMyInfoLoading = false;
       state.loadMyInfoDone = true;
@@ -44,6 +44,7 @@ const slice = createSlice({
         email,
         nickname,
         avatar,
+        desc,
         Followings,
         Followers,
       };
@@ -60,7 +61,7 @@ const slice = createSlice({
     },
     loginSuccess(
       state,
-      { payload: { id, email, nickname, avatar, Followers, Followings } },
+      { payload: { id, email, nickname, avatar, desc, Followers, Followings } },
     ) {
       state.loginLoading = false;
       state.loginDone = true;
@@ -69,6 +70,7 @@ const slice = createSlice({
         email,
         nickname,
         avatar,
+        desc,
         Followings,
         Followers,
       };
@@ -111,6 +113,7 @@ const slice = createSlice({
       state.editProfileError = null;
     },
     editProfileSuccess(state, { payload: { src, nickname, desc } }) {
+      console.log(desc);
       state.editProfileLoading = false;
       state.editProfileDone = true;
       state.me.avatar = src;
@@ -126,10 +129,10 @@ const slice = createSlice({
       state.addFollowDone = false;
       state.addFollowError = null;
     },
-    addFollowSuccess(state, { payload: { userId, nickname } }) {
+    addFollowSuccess(state, { payload }) {
       state.addFollowLoading = false;
       state.addFollowDone = true;
-      state.me.Followings.push({ id: userId, nickname });
+      state.me.Followings.push({ id: payload });
     },
     addFollowFail(state, { payload: error }) {
       console.log(error);

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects';
-import { editProfileToPost } from '../post/postSlice';
 import {
   loginFail,
   loginRequest,
@@ -71,31 +70,38 @@ function signUpAPI(data) {
 }
 function* signUp({ payload }) {
   try {
-    const result = yield call(signUpAPI, payload);
-    yield put(signUpSuccess(result));
+    yield call(signUpAPI, payload);
+    yield put(signUpSuccess());
   } catch (err) {
     console.log(err);
     yield put(signUpFail(err));
   }
 }
 
+function editProfileAPI(data) {
+  const { userId } = data;
+  return axios.patch(`/user/${userId}/edit`, data);
+}
 function* editProfile({ payload }) {
   try {
-    yield delay(1000);
-    yield put(editProfileSuccess(payload));
-    if (payload.src || payload.nickname) {
-      yield put(editProfileToPost(payload));
-    }
+    const result = yield call(editProfileAPI, payload);
+    yield put(editProfileSuccess(result.data));
+    // yield put(editProfileToPost(payload));
   } catch (err) {
     console.log(err);
     yield put(editProfileFail(err));
   }
 }
 
+function addFollowAPI(data) {
+  const { userId } = data;
+  console.log(userId);
+  return axios.patch(`/user/${userId}/follow`, data);
+}
 function* addFollow({ payload }) {
   try {
-    yield delay(1000);
-    yield put(addFollowSuccess(payload));
+    const result = yield call(addFollowAPI, payload);
+    yield put(addFollowSuccess(result.data));
   } catch (err) {
     console.log(err);
     yield put(addFollowFail(err));

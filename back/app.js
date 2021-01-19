@@ -1,11 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const path = require('path');  
 
 const passport = require('passport');
 const passportConfig = require('./passport');
 
 const userRouter = require('./routes/user.js');
+const postRouter = require('./routes/post.js');
+const postsRouter = require('./routes/posts.js');
 
 const db = require('./models');
 const app = express();
@@ -23,6 +26,8 @@ app.use(cors({
   credentials: true,
 }));
 
+app.use('/', express.static(path.join(__dirname, 'uploads')));
+
 // parse json and url-encoded query
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -35,6 +40,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/user', userRouter);
+app.use('/post', postRouter);
+app.use('/posts', postsRouter);
 
 app.listen(3055, () => {
   console.log('서버 실행중');

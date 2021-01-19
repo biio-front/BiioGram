@@ -1,19 +1,16 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { uploadImagesRequest } from '../redux/post/postSlice';
 
-const useUploadImages = (initialState) => {
-  const [images, setImage] = useState(initialState);
+const useUploadImages = () => {
+  const dispatch = useDispatch();
   const onFileChange = useCallback((e) => {
     const { files } = e.target;
-    let imageArr = [];
-    Array.prototype.forEach.call(files, (file, i) => {
-      const reader = new FileReader();
-      reader.onload = (finishedEvent) => {
-        const { result } = finishedEvent.currentTarget;
-        imageArr.push({ id: i, src: result });
-        setImage([...imageArr]);
-      };
-      reader.readAsDataURL(file);
+    const imageFormData = new FormData();
+    [].forEach.call(files, (file) => {
+      imageFormData.append('image', file);
     });
+    dispatch(uploadImagesRequest(imageFormData));
   }, []);
 
   const imageInput = useRef();
@@ -21,7 +18,7 @@ const useUploadImages = (initialState) => {
     imageInput.current.click();
   }, [imageInput.current]);
 
-  return [images, onFileChange, imageInput, onImageUpload];
+  return [onFileChange, imageInput, onImageUpload];
 };
 
 export default useUploadImages;

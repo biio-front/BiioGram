@@ -1,54 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import faker from 'faker';
-
-export const dummyPost = {
-  id: 1,
-  User: {
-    id: 1000,
-    nickname: 'dummy',
-    avatar: null,
-  },
-  Images: [
-    {
-      id: 1,
-      src:
-        'https://firebasestorage.googleapis.com/v0/b/haggendazs.appspot.com/o/BiioGram%2F_12285646.JPG?alt=media&token=ecad8e06-3d29-4e6e-a169-f582bc25ea66',
-    },
-    {
-      id: 2,
-      src:
-        'https://firebasestorage.googleapis.com/v0/b/haggendazs.appspot.com/o/BiioGram%2F_12285635.JPG?alt=media&token=740ef7a8-e636-49d0-baf8-8266ffb4ea5e',
-    },
-  ],
-  content: '첫 번째 포스트 #히히',
-  Likers: [
-    {
-      id: 0,
-      nickname: '사과맛',
-      avatar: null,
-    },
-  ],
-  Comments: [
-    {
-      id: 1,
-      User: {
-        id: 2,
-        nickname: faker.name.findName(),
-      },
-      content: '😙😙 예쁘다!',
-    },
-    {
-      id: 2,
-      User: {
-        id: 3,
-        nickname: faker.name.findName(),
-      },
-      content: '우와 운치있어요!!',
-    },
-  ],
-};
 
 export const initialState = {
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
+  uploadImagesLoading: false,
+  uploadImagesDone: false,
+  uploadImagesError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -70,73 +28,55 @@ export const initialState = {
   removeLikersLoading: false,
   removeLikersDone: false,
   removeLikersError: null,
-  mainPosts: [dummyPost],
+  mainPosts: [],
   singlePost: null,
+  imagePaths: null,
 };
-
-initialState.mainPosts = initialState.mainPosts.concat(
-  Array(10)
-    .fill()
-    .map((v, i) => ({
-      id: initialState.mainPosts.length + i + 1,
-      User: {
-        id: 10 + i,
-        nickname: faker.name.findName(),
-        avatar: '',
-      },
-      Images: [
-        {
-          id: 1,
-          src: faker.image.image(),
-        },
-      ],
-      content: faker.lorem.paragraph(),
-      Likers: [],
-      Comments: [
-        {
-          id: 1,
-          User: {
-            id: Math.ceil(Math.random() * 30) + 10,
-            nickname: faker.name.findName(),
-          },
-          content: faker.lorem.sentence(),
-        },
-        {
-          id: 2,
-          User: {
-            id: Math.ceil(Math.random() * 30) + 10,
-            nickname: faker.name.findName(),
-          },
-          content: faker.lorem.sentence(),
-        },
-      ],
-    })),
-);
 
 const slice = createSlice({
   name: 'post',
   initialState,
   reducers: {
+    loadPostsRequest(state) {
+      state.loadPostsLoading = true;
+      state.loadPostsDone = false;
+      state.loadPostsError = null;
+    },
+    loadPostsSuccess(state, { payload }) {
+      state.loadPostsLoading = false;
+      state.loadPostsDone = true;
+      state.mainPosts = payload;
+    },
+    loadPostsFail(state, { payload: error }) {
+      console.log(error);
+      state.loadPostsLoading = false;
+      state.loadPostsError = error;
+    },
+    uploadImagesRequest(state) {
+      state.uploadImagesLoading = true;
+      state.uploadImagesDone = false;
+      state.uploadImagesError = null;
+    },
+    uploadImagesSuccess(state, { payload }) {
+      console.log(payload);
+      state.uploadImagesLoading = false;
+      state.uploadImagesDone = true;
+      state.imagePaths = payload.map((v) => ({ src: `http://localhost:3055/${v}` }));
+    },
+    uploadImagesFail(state, { payload: error }) {
+      console.log(error);
+      state.uploadImagesLoading = false;
+      state.uploadImagesError = error;
+    },
     addPostRequest(state) {
       state.addPostLoading = true;
       state.addPostDone = false;
       state.addPostError = null;
     },
-    addPostSuccess(state, { payload: { images, text, me, newId } }) {
+    addPostSuccess(state) {
       state.addPostLoading = false;
       state.addPostDone = true;
-      state.mainPosts.unshift({
-        id: newId,
-        User: {
-          id: me.id,
-          nickname: me.nickname,
-          avatar: me.avatar,
-        },
-        Images: [...images],
-        content: text,
-        Likers: [],
-        Comments: [],
-      });
+      state.imagePaths = null;
     },
     addPostFail(state, { payload: error }) {
       console.log(error);
@@ -146,6 +86,7 @@ const slice = createSlice({
     updatePost(state, { payload: postId }) {
       const findPost = state.mainPosts.find((v) => v.id === postId);
       state.singlePost = findPost;
+      state.imagePaths = findPost.Images;
     },
     updatePostRequest(state) {
       state.updatePostLoading = true;
@@ -171,6 +112,7 @@ const slice = createSlice({
       state.removePostError = null;
     },
     removePostSuccess(state, { payload }) {
+      console.log(payload);
       state.removePostLoading = false;
       state.removePostDone = true;
       state.mainPosts = state.mainPosts.filter((v) => v.id !== payload);
@@ -266,6 +208,12 @@ const slice = createSlice({
 export default slice.reducer;
 export const {
   updatePost,
+  loadPostsRequest,
+  loadPostsSuccess,
+  loadPostsFail,
+  uploadImagesRequest,
+  uploadImagesSuccess,
+  uploadImagesFail,
   addPostRequest,
   addPostSuccess,
   addPostFail,

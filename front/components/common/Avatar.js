@@ -21,7 +21,7 @@ s.Avatar = styled.img`
   background-repeat: no-repeat;
 `;
 Avatar.propTypes = {
-  src: PropTypes.string.isRequired,
+  src: PropTypes.string,
   size: PropTypes.string.isRequired,
 };
 export default Avatar;

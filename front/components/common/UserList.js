@@ -13,10 +13,7 @@ const UserList = ({ nickname, userId }) => {
 
   const [oepnConfirm, setOpenConfirm] = useState(false);
   const onConfirm = useCallback(() => setOpenConfirm(true), []);
-  const onFollow = useCallback(
-    () => dispatch(addFollowRequest({ userId, nickname })),
-    [],
-  );
+  const onFollow = useCallback(() => dispatch(addFollowRequest(userId)), []);
   const onUnfollow = useCallback(() => dispatch(removeFollowRequest(userId)), []);
   const style = useMemo(() => ({ padding: '4px 8px' }));
   return (

@@ -1,10 +1,13 @@
-import React from 'react';
+import Router from 'next/router';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import Home from '../components/posts/Home';
 import Auth from './auth';
 
 const App = () => {
   const { me } = useSelector((state) => state.user);
+  const router = Router;
+  useEffect(() => !me && router.replace('/'), [me]);
   return <>{me ? <Home /> : <Auth />}</>;
 };
 

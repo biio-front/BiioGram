@@ -33,9 +33,7 @@ const PostMenu = ({ userId, postId, nickname }) => {
   }, []);
 
   const onToggleFollow = useCallback(() => {
-    dispatch(
-      follow ? removeFollowRequest(userId) : addFollowRequest({ userId, nickname }),
-    );
+    dispatch(follow ? removeFollowRequest(userId) : addFollowRequest(userId));
     setFollow((prev) => !prev);
   }, [follow]);
 

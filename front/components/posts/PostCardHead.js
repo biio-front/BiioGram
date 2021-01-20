@@ -12,10 +12,7 @@ const PostCardHead = ({ userId, nickname, avatar, postId }) => {
   const dispatch = useDispatch();
 
   const [openMenu, setOpenMenu] = useState(false);
-  const onFollow = useCallback(
-    () => dispatch(addFollowRequest({ userId, nickname })),
-    [],
-  );
+  const onFollow = useCallback(() => dispatch(addFollowRequest(userId)), []);
   const onToggleMenu = useCallback(() => {
     setOpenMenu((prev) => !prev);
   }, []);

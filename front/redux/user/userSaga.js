@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects';
+import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 import {
   loginFail,
   loginRequest,
@@ -86,7 +86,6 @@ function* editProfile({ payload }) {
   try {
     const result = yield call(editProfileAPI, payload);
     yield put(editProfileSuccess(result.data));
-    // yield put(editProfileToPost(payload));
   } catch (err) {
     console.log(err);
     yield put(editProfileFail(err));
@@ -94,9 +93,7 @@ function* editProfile({ payload }) {
 }
 
 function addFollowAPI(data) {
-  const { userId } = data;
-  console.log(userId);
-  return axios.patch(`/user/${userId}/follow`, data);
+  return axios.patch(`/user/${data}/follow`); // PATCH /user/userId/follow
 }
 function* addFollow({ payload }) {
   try {
@@ -108,10 +105,13 @@ function* addFollow({ payload }) {
   }
 }
 
+function removeFollowAPI(data) {
+  return axios.delete(`/user/${data}/follow`); // DELETE /user/userId/follow
+}
 function* removeFollow({ payload }) {
   try {
-    yield delay(1000);
-    yield put(removeFollowSuccess(payload));
+    const result = yield call(removeFollowAPI, payload);
+    yield put(removeFollowSuccess(result.data));
   } catch (err) {
     console.log(err);
     yield put(removeFollowFail(err));

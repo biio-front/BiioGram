@@ -155,29 +155,29 @@ const slice = createSlice({
       state.removeFollowLoading = false;
       state.removeFollowError = error;
     },
-    addPostToMe(state, { payload: { images, newId } }) {
-      state.me.Posts.unshift({
-        id: newId,
-        Images: { ...images },
-        Comments: [],
-        Likers: [],
-      });
-    },
-    updatePostToMe(state, { payload: { images, postId } }) {
-      const post = state.me.Posts.find((v) => v.id === postId);
-      post.Images = [...images];
-    },
-    removePostToMe(state, { payload }) {
-      state.me.Posts = state.me.Posts.filter((v) => v.id !== payload);
-    },
-    addCommentToMe(state, { payload: { postId } }) {
-      const post = state.me.Posts.find((v) => v.id === postId);
-      post.Comments.push({ id: post.Comments.length + 1 });
-    },
-    removeCommentToMe(state, { payload: { postId, commentId } }) {
-      const post = state.me.Posts.find((v) => v.id === postId);
-      post.Comments = post.Comments.filter((v) => v.id !== commentId);
-    },
+    // addPostToMe(state, { payload: { images, newId } }) {
+    //   state.me.Posts.unshift({
+    //     id: newId,
+    //     Images: { ...images },
+    //     Comments: [],
+    //     Likers: [],
+    //   });
+    // },
+    // updatePostToMe(state, { payload: { images, postId } }) {
+    //   const post = state.me.Posts.find((v) => v.id === postId);
+    //   post.Images = [...images];
+    // },
+    // removePostToMe(state, { payload }) {
+    //   state.me.Posts = state.me.Posts.filter((v) => v.id !== payload);
+    // },
+    // addCommentToMe(state, { payload: { postId } }) {
+    //   const post = state.me.Posts.find((v) => v.id === postId);
+    //   post.Comments.push({ id: post.Comments.length + 1 });
+    // },
+    // removeCommentToMe(state, { payload: { postId, commentId } }) {
+    //   const post = state.me.Posts.find((v) => v.id === postId);
+    //   post.Comments = post.Comments.filter((v) => v.id !== commentId);
+    // },
   },
 });
 

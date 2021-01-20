@@ -73,15 +73,23 @@ router.post('/login', async (req, res, next) => { // POST /user/login
         process.env.JWT_SECRET, 
         { expiresIn: '5m' },
       );
-      res.cookie('RefreshToken', refreshToken, { httpOnly: true });
+      res.cookie('RefreshToken', refreshToken, { httpOnly: true, secure: true });
       return res.status(200).json({ me: fullUserWithoutPassword, token: accessToken });
     });
   })(req, res, next);
 });
 
-router.get('/', 
+router.delete('/logout', // DELETE /user/logout
+  async (req, res,) => { 
+    req.logout();
+    res.clearCookie('RefreshToken');
+    res.status(200).send('ok');
+  }
+);
+
+router.get('/', // GET /user
   passport.authenticate('jwt', { session: false }), 
-  async (req, res, next) => { // GET /user
+  async (req, res, next) => { 
     try {
       const { id } = req.user;
       const fullUserWithoutPassword = await User.findOne({
@@ -112,6 +120,7 @@ router.get('/:userId/posts', async (req, res, next) => { // GET /user/1/posts
     const { userId } = req.params;
     const posts = await Post.findAll({
       where: { UserId: userId },
+      order: [['createdAt', 'DESC']],
       include: [{
         model: Image,
       }, {
@@ -197,13 +206,34 @@ router.patch('/:userId/follow', // PATCH /user/1/follow
       if (!user) {
         return res.status(403).send('존재하지 않는 유저입니다.');
       }
-      await user.addFollowers(id); // 대상 팔로워에 나 더하기(팔로잉하기)
+      await user.addFollowers(id); // 대상 팔로워리스트에 나 더하기(팔로잉하기)
       res.status(200).json(parseInt(userId, 10));
     } catch (error) {
       console.error(error);
       next(error);
     }
   }
-)
+);
+
+router.delete('/:userId/follow', // DELETE /user/1/follow
+  passport.authenticate('jwt', { session: false }),
+  async (req, res, next) => {
+    try {
+      const { userId } = req.params;
+      const { id } = req.user;
+      const user = await User.findOne({  // 팔로우 할 대상
+        where: { id: userId }
+      });
+      if (!user) {
+        return res.status(403).send('존재하지 않는 유저입니다.');
+      }
+      await user.removeFollowers(id); // 대상 팔로워리스트에서 나 빼기(팔로잉취소)
+      res.status(200).json(parseInt(userId, 10));
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+);
 
 module.exports = router;

@@ -45,7 +45,7 @@ s.Icon = styled(Icon)`
 ProfileHead.propTypes = {
   children: PropTypes.node.isRequired,
   avatar: PropTypes.string,
-  nickname: PropTypes.string.isRequired,
+  nickname: PropTypes.string,
   edit: PropTypes.string,
 };
 export default ProfileHead;

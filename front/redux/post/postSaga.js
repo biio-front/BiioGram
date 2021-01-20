@@ -25,6 +25,9 @@ import {
   loadPostsRequest,
   loadPostsSuccess,
   loadPostsFail,
+  loadHashtagPostsRequest,
+  loadHashtagPostsSuccess,
+  loadHashtagPostsFail,
 } from './postSlice';
 import { resetImagePaths } from '../image/imageSlice';
 
@@ -38,6 +41,20 @@ function* loadPosts() {
   } catch (err) {
     console.log(err);
     yield put(loadPostsFail(err));
+  }
+}
+
+function loadHashtagPostsAPI(data) {
+  return axios.get(`/hashtag/${data}`);
+}
+function* loadHashtagPosts({ payload }) {
+  try {
+    const result = yield call(loadHashtagPostsAPI, payload);
+    console.log(result.data);
+    yield put(loadHashtagPostsSuccess(result.data));
+  } catch (err) {
+    console.log(err);
+    yield put(loadHashtagPostsFail(err));
   }
 }
 
@@ -135,6 +152,9 @@ function* removeLikers({ payload }) {
   }
 }
 
+export function* watchLoadHashtagPosts() {
+  yield takeLatest(loadHashtagPostsRequest, loadHashtagPosts);
+}
 export function* watchLoadPosts() {
   yield takeLatest(loadPostsRequest, loadPosts);
 }
@@ -163,6 +183,7 @@ export function* watchRemoveLikers() {
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
+    fork(watchLoadHashtagPosts),
     fork(watchAddPost),
     fork(watchUpdatePost),
     fork(watchremovePost),

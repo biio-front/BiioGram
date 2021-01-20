@@ -6,6 +6,7 @@ import { addFollowRequest } from '../../redux/user/userSlice';
 import Avatar from '../common/Avatar';
 import PostMenu from './PostMenu';
 import PropTypes from 'prop-types';
+import Link from 'next/link';
 
 const PostCardHead = ({ userId, nickname, avatar, postId }) => {
   const { id, Followings } = useSelector((state) => state.user.me);
@@ -22,14 +23,17 @@ const PostCardHead = ({ userId, nickname, avatar, postId }) => {
     <s.Grid style={style}>
       <Grid.Row verticalAlign="middle">
         <Grid.Column width={10}>
-          <Avatar
-            src={
-              avatar
-                ? avatar
-                : 'https://react.semantic-ui.com/images/wireframe/square-image.png'
-            }
-            size="31px"
-          />
+          <Link href={`/profile/${userId}`}>
+            <a>
+              <Avatar
+                src={
+                  avatar ||
+                  'https://react.semantic-ui.com/images/wireframe/square-image.png'
+                }
+                size="31px"
+              />
+            </a>
+          </Link>
           <span>
             <b>{nickname}</b>
             {userId === id ||

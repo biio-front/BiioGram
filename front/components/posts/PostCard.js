@@ -48,7 +48,9 @@ const PostCard = ({ user, content, Images, comments, postId, Likers }) => {
           size="large"
           onClick={() => setToggleComment((prev) => !prev)}
         />
-        <ListModal title="좋아요" list={Likers} />
+        <s.like>
+          <ListModal title="좋아요" list={Likers} />
+        </s.like>
       </s.btn>
 
       {/* 포스트 내용 */}
@@ -81,6 +83,10 @@ s.btn = styled.div`
   & p {
     margin-top: 5px;
   }
+`;
+s.like = styled.div`
+  width: 80px;
+  cursor: pointer;
 `;
 PostCard.propTypes = {
   user: PropTypes.shape({

@@ -66,9 +66,9 @@ s.container = styled.div`
   position: relative;
   overflow: hidden;
   & i {
-    padding: 50px 0;
+    padding: 210px 0;
     position: absolute;
-    top: calc(50% - 58px);
+    top: calc(50% - 218px);
     z-index: 490;
     margin: 0 0.25rem;
     cursor: pointer;

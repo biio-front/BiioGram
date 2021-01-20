@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { Grid, List } from 'semantic-ui-react';
 import styled from 'styled-components';
 import useSWR from 'swr';
@@ -7,15 +7,18 @@ import AppLayout from '../../components/layout/AppLayout';
 import PostImg from '../../components/profile/PostImg';
 import ListModal from '../../components/common/ListModal';
 import ProfileHead from '../../components/profile/profileHead';
-import { loadMyInfoRequest } from '../../redux/user/userSlice';
 import fetcher from '../../util/SWR_fetcher';
+import { useRouter } from 'next/router';
 
 const Profile = () => {
-  const { id: userId, nickname, desc, avatar } = useSelector((state) => state.user.me);
-  const dispatch = useDispatch();
+  const router = useRouter();
+  const { userId } = router.query;
+  const { id } = useSelector((state) => state.user.me);
 
-  useEffect(() => dispatch(loadMyInfoRequest()), []);
-
+  const { data: userInfo, error: userInfoError } = useSWR(
+    `http://localhost:3055/user/${userId}/`,
+    fetcher,
+  );
   const { data: userPosts, error: userPostsError } = useSWR(
     `http://localhost:3055/user/${userId}/posts`,
     fetcher,
@@ -29,14 +32,17 @@ const Profile = () => {
     fetcher,
   );
 
-  if (userPostsError || followerError || followingsError)
+  if (userInfoError || userPostsError || followerError || followingsError)
     return <div>다시 시도해주세요.</div>;
-
   return (
     <>
       <AppLayout>
         <s.profile>
-          <ProfileHead avatar={avatar} nickname={nickname} edit="수정하기">
+          <ProfileHead
+            avatar={userInfo?.avatar}
+            nickname={userInfo?.nickname}
+            edit={parseInt(userId, 10) === id ? '수정하기' : null}
+          >
             {/* 프로필 상단 오른쪽 */}
             <s.List horizontal>
               <List.Item>
@@ -49,7 +55,7 @@ const Profile = () => {
                 <ListModal list={followingsData || []} title="팔로우" />
               </List.Item>
             </s.List>
-            <p>{desc}</p>
+            <p>{userInfo?.desc}</p>
           </ProfileHead>
 
           {/* 내가 쓴 게시글 보기 */}

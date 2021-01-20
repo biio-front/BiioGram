@@ -24,7 +24,7 @@ const ListModal = ({ list, title }) => {
       {list && (
         <List selection verticalAlign="middle">
           {list.map((v, i) => (
-            <UserList key={i} nickname={v.nickname} userId={v.id} />
+            <UserList key={i} nickname={v.nickname} userId={v.id} avatar={v.avatar} />
           ))}
         </List>
       )}
@@ -48,6 +48,7 @@ ListModal.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       nickname: PropTypes.string.isRequired,
+      avatar: PropTypes.string,
     }),
   ).isRequired,
   title: PropTypes.string.isRequired,

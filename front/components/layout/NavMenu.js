@@ -7,7 +7,10 @@ import { logoutRequest } from '../../redux/user/userSlice';
 import DropDownMenu from '../common/DropDownMenu';
 
 const NavMenu = () => {
-  const { logoutLoading } = useSelector((state) => state.user);
+  const {
+    logoutLoading,
+    me: { id },
+  } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const onLogout = useCallback(() => {
@@ -18,7 +21,7 @@ const NavMenu = () => {
   return (
     <DropDownMenu top="64px">
       <List.Item>
-        <Link href="/profile">
+        <Link href={`/profile/${id}`}>
           <a>
             <Icon name="user circle" /> 프로필
           </a>

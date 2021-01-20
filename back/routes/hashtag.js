@@ -1,20 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const { Post, Comment, User, Image } = require('../models');
+const { Post, Comment, User, Image, Hashtag } = require('../models');
 
-router.get('/', async (req, res, next) => {
+router.get('/:tag', async (req, res, next) => { // GET /hashtag/[tag]
   try {
+    const { tag } = req.params;
     const posts = await Post.findAll({
       order: [
         ['createdAt', 'DESC'],
         [Comment, 'createdAt', 'DESC'],
       ],
       include: [{
+        model: Hashtag,
+        as: 'Hashtags',
+        where: { content: decodeURIComponent(tag) },
+      }, {
         model: User,
         attributes: ['id', 'nickname', 'avatar'],
       }, {
         model: Image,
-        attributes: ['id', 'src'],
       }, {
         model: Comment,
         include: [{

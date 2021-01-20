@@ -4,6 +4,9 @@ export const initialState = {
   loadPostsLoading: false,
   loadPostsDone: false,
   loadPostsError: null,
+  loadHashtagPostsLoading: false,
+  loadHashtagPostsDone: false,
+  loadHashtagPostsError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -48,6 +51,22 @@ const slice = createSlice({
       state.loadPostsLoading = false;
       state.loadPostsError = error;
     },
+    loadHashtagPostsRequest(state) {
+      state.loadHashtagPostsLoading = true;
+      state.loadHashtagPostsDone = false;
+      state.loadHashtagPostsError = null;
+    },
+    loadHashtagPostsSuccess(state, { payload }) {
+      state.loadHashtagPostsLoading = false;
+      state.loadHashtagPostsDone = true;
+      state.mainPosts = payload;
+      console.log(payload);
+    },
+    loadHashtagPostsFail(state, { payload: error }) {
+      console.log(error);
+      state.loadHashtagPostsLoading = false;
+      state.loadHashtagPostsError = error;
+    },
     addPostRequest(state) {
       state.addPostLoading = true;
       state.addPostDone = false;
@@ -91,7 +110,6 @@ const slice = createSlice({
       state.removePostError = null;
     },
     removePostSuccess(state, { payload }) {
-      console.log(payload);
       state.removePostLoading = false;
       state.removePostDone = true;
       state.mainPosts = state.mainPosts.filter((v) => v.id !== payload);
@@ -174,6 +192,9 @@ export const {
   loadPostsRequest,
   loadPostsSuccess,
   loadPostsFail,
+  loadHashtagPostsRequest,
+  loadHashtagPostsSuccess,
+  loadHashtagPostsFail,
   addPostRequest,
   addPostSuccess,
   addPostFail,

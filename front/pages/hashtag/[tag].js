@@ -1,12 +1,12 @@
+import { useRouter } from 'next/router';
 import React from 'react';
-import AppLayout from '../../components/layout/AppLayout';
+import Posts from '../../components/posts/Posts';
+import { loadHashtagPostsRequest } from '../../redux/post/postSlice';
 
 const hashtag = () => {
-  return (
-    <AppLayout>
-      <p>이 기능은 준비 중입니다.</p>
-    </AppLayout>
-  );
+  const router = useRouter();
+  const { tag } = router.query;
+  return <Posts whatPosts={loadHashtagPostsRequest} query={tag} />;
 };
 
 export default hashtag;

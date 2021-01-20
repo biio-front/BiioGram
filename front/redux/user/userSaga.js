@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
+import { resetImagePaths } from '../image/imageSlice';
 import {
   loginFail,
   loginRequest,
@@ -86,6 +87,7 @@ function* editProfile({ payload }) {
   try {
     const result = yield call(editProfileAPI, payload);
     yield put(editProfileSuccess(result.data));
+    yield put(resetImagePaths());
   } catch (err) {
     console.log(err);
     yield put(editProfileFail(err));

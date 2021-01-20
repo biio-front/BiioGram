@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadPostsRequest } from '../../redux/post/postSlice';
 import AppLayout from '../layout/AppLayout';
 import PostCard from './PostCard';
+import PropTypes from 'prop-types';
 
-const Home = () => {
+const Posts = ({ whatPosts, query }) => {
   const { mainPosts } = useSelector((state) => state.post);
   const dispatch = useDispatch();
-  useEffect(() => dispatch(loadPostsRequest()), []);
+  useEffect(() => dispatch(whatPosts(query)), []);
 
   return (
     <div>
@@ -28,4 +28,8 @@ const Home = () => {
   );
 };
 
-export default Home;
+Posts.propTypes = {
+  whatPosts: PropTypes.func.isRequired,
+  query: PropTypes.string,
+};
+export default Posts;

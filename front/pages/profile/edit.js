@@ -11,24 +11,26 @@ import ProfileHead from '../../components/profile/profileHead';
 
 const EditProfile = () => {
   const { me, editProfileLoading } = useSelector((state) => state.user);
+  const { imagePaths } = useSelector((state) => state.image);
   const dispatch = useDispatch();
 
-  const [images, onFileChange, imageInput, onImageUpload] = useUploadImages();
+  const [onFileChange, imageInput, onImageUpload] = useUploadImages();
   const [nickname, onChangeNickname] = useInput(me.nickname);
-  const [desc, onChangeDesc] = useInput(me.desc);
+  const [desc, onChangeDesc] = useInput(me.desc || '');
 
   const onSubmit = useCallback(() => {
-    let src = null;
-    if (images) src = images[0]?.src;
     const userId = me.id;
-    dispatch(editProfileRequest({ src, nickname, desc, userId }));
-  }, [images, nickname, desc]);
-  Router.push('/profile');
+    dispatch(editProfileRequest({ src: imagePaths[0]?.src, nickname, desc, userId }));
+    Router.replace('/profile');
+  }, [imagePaths, nickname, desc]);
 
   return (
     <AppLayout>
       <s.article>
-        <ProfileHead avatar={images ? images[0]?.src : me.avatar} nickname={nickname}>
+        <ProfileHead
+          avatar={imagePaths ? imagePaths[0]?.src : me.avatar}
+          nickname={nickname}
+        >
           <input
             type="file"
             accept="image/*"

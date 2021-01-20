@@ -47,6 +47,7 @@ const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
               commentId={v.id}
               userId={v.User.id}
               nickname={v.User.nickname}
+              avatar={v.User.avatar}
               content={v.content}
             />
           ))}
@@ -59,6 +60,7 @@ const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
             commentId={comments.length + 1}
             userId={me.id}
             nickname={me.nickname}
+            avatar={me.avatar}
             content={newComment}
           />
         </List>

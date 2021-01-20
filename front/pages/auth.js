@@ -44,7 +44,7 @@ const Auth = () => {
         </Form>
         {loginError && '이메일이나 비밀번호를 확인해주세요.'}
       </AuthCard>
-      <AuthLinkCard query="계정이 없으신가요?">
+      <AuthLinkCard question="계정이 없으신가요?">
         <Link href="/signUp">가입하기</Link>
       </AuthLinkCard>
     </>

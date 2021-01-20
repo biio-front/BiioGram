@@ -1,12 +1,15 @@
 import React, { useCallback, useState } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import { Header, Icon, Image } from 'semantic-ui-react';
+import { Header, Icon } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import styled from 'styled-components';
 import NavMenu from './NavMenu';
+import Avatar from '../common/Avatar';
+import { useSelector } from 'react-redux';
 
 const AppLayout = ({ children }) => {
+  const { avatar } = useSelector((state) => state.user.me);
   const [oepnMenu, setOpenMenu] = useState(false);
 
   const onClick = useCallback(() => {
@@ -28,12 +31,9 @@ const AppLayout = ({ children }) => {
                 <Icon name="plus" size="large" />
               </a>
             </Link>
-            <Image
-              src="https://react.semantic-ui.com/images/wireframe/square-image.png"
-              avatar
-              floated="right"
-              onClick={onClick}
-            />
+            <span onClick={onClick}>
+              <Avatar src={avatar} size="45" />
+            </span>
           </div>
         </nav>
         {oepnMenu && <NavMenu />}
@@ -60,6 +60,8 @@ s.header = styled.header`
       & img {
         cursor: pointer;
         float: right;
+        transform: translate(0, -10px);
+        margin-left: 15px;
       }
     }
   }

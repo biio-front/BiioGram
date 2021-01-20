@@ -29,7 +29,7 @@ const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
   }, []);
 
   const onSubmit = useCallback(() => {
-    dispatch(addCommentRequest({ postId, me, text }));
+    dispatch(addCommentRequest({ postId, content: text }));
     setNewComment(text);
     setText('');
   }, [text]);

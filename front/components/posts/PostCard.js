@@ -11,16 +11,14 @@ import { addLikersRequest, removeLikersRequest } from '../../redux/post/postSlic
 import PostCardHead from './PostCardHead';
 
 const PostCard = ({ user, content, Images, comments, postId, Likers }) => {
-  const { me } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const { id: myId } = useSelector((state) => state.user.me);
 
   const [toggleComment, setToggleComment] = useState(false);
-  const [hearted, setHearted] = useState(false);
+  const [hearted, setHearted] = useState(Likers.find((v) => v.id === myId));
 
   const onToggleHeart = useCallback(() => {
-    dispatch(
-      hearted ? removeLikersRequest({ postId, me }) : addLikersRequest({ postId, me }),
-    );
+    dispatch(hearted ? removeLikersRequest(postId) : addLikersRequest(postId));
     setHearted((prev) => !prev);
   }, [hearted]);
 
@@ -101,7 +99,7 @@ PostCard.propTypes = {
   Likers: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
-      nickname: PropTypes.string.isRequired,
+      nickname: PropTypes.string,
       avatar: PropTypes.string,
     }),
   ).isRequired,

@@ -24,9 +24,9 @@ router.get('/',
             attributes: ['id', 'nickname', 'avatar'],
           }],
         }, {
-          model: User,
+          model: User, // 좋아요 누른 사람
           as: 'Likers',
-          attributes: ['id', 'avatar'],
+          attributes: ['id', 'nickname', 'avatar'],
         }]
       });
       res.status(200).json(posts);

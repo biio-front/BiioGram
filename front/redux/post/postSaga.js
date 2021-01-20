@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { all, call, delay, fork, put, takeLatest } from 'redux-saga/effects';
+import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 import {
   addCommentRequest,
   addCommentSuccess,
@@ -26,7 +26,6 @@ import {
   loadPostsSuccess,
   loadPostsFail,
 } from './postSlice';
-import { addCommentToMe, removeCommentToMe } from '../user/userSlice';
 import { resetImagePaths } from '../image/imageSlice';
 
 function loadPostsAPI() {
@@ -84,40 +83,52 @@ function* removePost({ payload }) {
   }
 }
 
+function addCommentAPI({ postId, content }) {
+  return axios.post(`/post/${postId}/comment`, { content });
+}
 function* addComment({ payload }) {
   try {
-    yield delay(1000);
-    yield put(addCommentSuccess(payload));
-    yield put(addCommentToMe(payload));
+    const result = yield call(addCommentAPI, payload);
+    yield put(addCommentSuccess(result.data));
   } catch (err) {
     console.log(err);
     yield put(addCommentFail(err));
   }
 }
 
+function removeCommentAPI({ postId, commentId }) {
+  return axios.delete(`/post/${postId}/comment/${commentId}`);
+}
 function* removeComment({ payload }) {
   try {
-    yield delay(1000);
-    yield put(removeCommentSuccess(payload));
-    yield put(removeCommentToMe(payload));
+    const result = yield call(removeCommentAPI, payload);
+    yield put(removeCommentSuccess(result.data));
   } catch (err) {
     console.log(err);
     yield put(removeCommentFail(err));
   }
 }
 
+function addLikersAPI(data) {
+  return axios.patch(`/post/${data}/like`); // PATCH /post/postId/like
+}
 function* addLikers({ payload }) {
   try {
-    yield put(addLikersSuccess(payload));
+    const result = yield call(addLikersAPI, payload);
+    yield put(addLikersSuccess(result.data));
   } catch (err) {
     console.log(err);
     yield put(addLikersFail(err));
   }
 }
 
+function removeLikersAPI(data) {
+  return axios.delete(`/post/${data}/like`); // DELET /post/postId/like
+}
 function* removeLikers({ payload }) {
   try {
-    yield put(removeLikersSuccess(payload));
+    const result = yield call(removeLikersAPI, payload);
+    yield put(removeLikersSuccess(result.data));
   } catch (err) {
     console.log(err);
     yield put(removeLikersFail(err));

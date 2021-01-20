@@ -14,7 +14,7 @@ router.get('/',
         ],
         include: [{
           model: User,
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         }, {
           model: Image,
         }, {

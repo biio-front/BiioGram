@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import DropDownMenu from '../common/DropDownMenu';
-import { updatePost, removePostRequest } from '../../redux/post/postSlice';
+import { preupdatePost, removePostRequest } from '../../redux/post/postSlice';
 import { addFollowRequest, removeFollowRequest } from '../../redux/user/userSlice';
 import Link from 'next/link';
 
@@ -25,7 +25,7 @@ const PostMenu = ({ userId, postId, nickname }) => {
   }, [follow]);
 
   const onUpdate = useCallback(() => {
-    dispatch(updatePost(postId));
+    dispatch(preupdatePost(postId));
   }, []);
 
   const onRemove = useCallback(() => {

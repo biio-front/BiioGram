@@ -22,14 +22,12 @@ import {
   updatePostRequest,
   updatePostSuccess,
   updatePostFail,
-  uploadImagesRequest,
-  uploadImagesSuccess,
-  uploadImagesFail,
   loadPostsRequest,
   loadPostsSuccess,
   loadPostsFail,
 } from './postSlice';
-import { addCommentToMe, addPostToMe, removeCommentToMe } from '../user/userSlice';
+import { addCommentToMe, removeCommentToMe } from '../user/userSlice';
+import { resetImagePaths } from '../image/imageSlice';
 
 function loadPostsAPI() {
   return axios.get('/posts');
@@ -44,39 +42,29 @@ function* loadPosts() {
   }
 }
 
-function uploadImagesAPI(data) {
-  return axios.post('/post/images', data);
-}
-function* uploadImages({ payload }) {
-  try {
-    const result = yield call(uploadImagesAPI, payload);
-    yield put(uploadImagesSuccess(result.data));
-  } catch (err) {
-    console.log(err);
-    yield put(uploadImagesFail(err));
-  }
-}
-
 function addPostAPI(data) {
   return axios.post('/post', data);
 }
 function* addPost({ payload }) {
   try {
     const result = yield call(addPostAPI, payload);
-    console.log(result.data);
     yield put(addPostSuccess(result.data));
-    // yield put(addPostToMe({ ...payload }));
+    yield put(resetImagePaths());
   } catch (err) {
     console.log(err);
     yield put(addPostFail(err));
   }
 }
 
+function updatePostAPI(data) {
+  const { postId } = data;
+  return axios.put(`/post/${postId}`, data);
+}
 function* updatePost({ payload }) {
   try {
-    yield delay(1000);
-    yield put(updatePostSuccess({ ...payload }));
-    yield put(addPostToMe({ ...payload }));
+    const result = yield call(updatePostAPI, payload);
+    yield put(updatePostSuccess(result.data));
+    yield put(resetImagePaths());
   } catch (err) {
     console.log(err);
     yield put(updatePostFail(err));
@@ -139,9 +127,6 @@ function* removeLikers({ payload }) {
 export function* watchLoadPosts() {
   yield takeLatest(loadPostsRequest, loadPosts);
 }
-export function* watchUploadImages() {
-  yield takeLatest(uploadImagesRequest, uploadImages);
-}
 export function* watchAddPost() {
   yield takeLatest(addPostRequest, addPost);
 }
@@ -167,7 +152,6 @@ export function* watchRemoveLikers() {
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
-    fork(watchUploadImages),
     fork(watchAddPost),
     fork(watchUpdatePost),
     fork(watchremovePost),

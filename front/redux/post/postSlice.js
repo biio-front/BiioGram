@@ -4,9 +4,6 @@ export const initialState = {
   loadPostsLoading: false,
   loadPostsDone: false,
   loadPostsError: null,
-  uploadImagesLoading: false,
-  uploadImagesDone: false,
-  uploadImagesError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -30,7 +27,6 @@ export const initialState = {
   removeLikersError: null,
   mainPosts: [],
   singlePost: null,
-  imagePaths: null,
 };
 
 const slice = createSlice({
@@ -52,22 +48,6 @@ const slice = createSlice({
       state.loadPostsLoading = false;
       state.loadPostsError = error;
     },
-    uploadImagesRequest(state) {
-      state.uploadImagesLoading = true;
-      state.uploadImagesDone = false;
-      state.uploadImagesError = null;
-    },
-    uploadImagesSuccess(state, { payload }) {
-      console.log(payload);
-      state.uploadImagesLoading = false;
-      state.uploadImagesDone = true;
-      state.imagePaths = payload.map((v) => ({ src: `http://localhost:3055/${v}` }));
-    },
-    uploadImagesFail(state, { payload: error }) {
-      console.log(error);
-      state.uploadImagesLoading = false;
-      state.uploadImagesError = error;
-    },
     addPostRequest(state) {
       state.addPostLoading = true;
       state.addPostDone = false;
@@ -76,29 +56,28 @@ const slice = createSlice({
     addPostSuccess(state) {
       state.addPostLoading = false;
       state.addPostDone = true;
-      state.imagePaths = null;
     },
     addPostFail(state, { payload: error }) {
       console.log(error);
       state.addPostLoading = false;
       state.addPostError = error;
     },
-    updatePost(state, { payload: postId }) {
+    preupdatePost(state, { payload: postId }) {
       const findPost = state.mainPosts.find((v) => v.id === postId);
       state.singlePost = findPost;
-      state.imagePaths = findPost.Images;
     },
     updatePostRequest(state) {
       state.updatePostLoading = true;
       state.updatePostDone = false;
       state.updatePostError = null;
     },
-    updatePostSuccess(state, { payload: { images, text } }) {
+    updatePostSuccess(state, { payload: { images, content } }) {
+      console.log(images);
       const updatePost = state.mainPosts.find((v) => v.id === state.singlePost.id);
       state.updatePostLoading = false;
       state.updatePostDone = true;
-      updatePost.Images = [...images];
-      updatePost.content = text;
+      updatePost.Images = images;
+      updatePost.content = content;
       state.singlePost = null;
     },
     updatePostFail(state, { payload: error }) {
@@ -207,13 +186,10 @@ const slice = createSlice({
 
 export default slice.reducer;
 export const {
-  updatePost,
+  preupdatePost,
   loadPostsRequest,
   loadPostsSuccess,
   loadPostsFail,
-  uploadImagesRequest,
-  uploadImagesSuccess,
-  uploadImagesFail,
   addPostRequest,
   addPostSuccess,
   addPostFail,

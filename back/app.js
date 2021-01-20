@@ -9,6 +9,7 @@ const passportConfig = require('./passport');
 const userRouter = require('./routes/user.js');
 const postRouter = require('./routes/post.js');
 const postsRouter = require('./routes/posts.js');
+const imagesRouter = require('./routes/images.js');
 
 const db = require('./models');
 const app = express();
@@ -42,6 +43,7 @@ app.get('/', (req, res) => {
 app.use('/user', userRouter);
 app.use('/post', postRouter);
 app.use('/posts', postsRouter);
+app.use('/images', imagesRouter);
 
 app.listen(3055, () => {
   console.log('서버 실행중');

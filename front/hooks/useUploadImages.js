@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { uploadImagesRequest } from '../redux/post/postSlice';
+import { uploadImagesRequest } from '../redux/image/imageSlice';
 
 const useUploadImages = () => {
   const dispatch = useDispatch();

@@ -11,8 +11,8 @@ import Slider from './Slider';
 import Router from 'next/router';
 
 const PostForm = ({ post }) => {
-  const { addPostLoading, addPostDone, imagePaths } = useSelector((state) => state.post);
-  // const { id: userId } = useSelector((state) => state.user.me);
+  const { addPostLoading, addPostDone } = useSelector((state) => state.post);
+  const { imagePaths } = useSelector((state) => state.image);
   const dispatch = useDispatch();
 
   const [onFileChange, imageInput, onImageUpload] = useUploadImages();
@@ -23,12 +23,15 @@ const PostForm = ({ post }) => {
   }, [addPostDone]);
 
   const onSubmit = useCallback(() => {
+    if (!imagePaths) return window.alert('사진을 추가해주세요.');
+    if (!text) return window.alert('내용을 작성해주세요');
     post
-      ? dispatch(updatePostRequest({ content: text, image: imagePaths, postId: post.id }))
-      : dispatch(addPostRequest({ content: text, image: imagePaths }));
+      ? dispatch(
+          updatePostRequest({ content: text, images: imagePaths, postId: post.id }),
+        )
+      : dispatch(addPostRequest({ content: text, images: imagePaths }));
     Router.push('/');
-  }, [text]);
-  imagePaths && console.log(imagePaths);
+  }, [text, imagePaths]);
   return (
     <>
       <AppLayout>

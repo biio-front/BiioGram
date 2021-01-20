@@ -1,43 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const multer = require('multer');
-const { diskStorage } = require('multer');
-const path = require('path');  // 노드에서 제공하는 모듈
 const { Post, Hashtag, Image, Comment, User } = require('../models');
-
-const upload = multer({
-  storage: diskStorage({  // 어디에 저장할 것인가? 일단은 하드디스크
-    destination(req, file, done) {
-      done(null, 'uploads');   // 업로즈 폴더에...
-    },
-    filename(req, file, done) {  // 비오.png
-      const ext = path.extname(file.originalname);  //확장자 추출(png)
-      const basename = path.basename(file.originalname, ext); // 비오
-      done(null, basename + '_' + new Date().getTime() + ext); // 비오1234(시간초).png
-    }
-  }),
-  limits: { fileSize: 20 * 1024 * 1024 }, // 용량제한 20Mb
-});
-router.post('/images',
-  passport.authenticate('jwt', { session: false }), 
-  upload.array('image'),
-  async (req, res, next) => {
-    try {
-      const { files } = req;
-      res.status(200).json(files.map(file => file.filename));
-    } catch (error) {
-      console.error(error);
-      next(error);
-    }
-  }
-);
 
 router.post('/', // POST /post
   passport.authenticate('jwt', { session: false }), 
   async (req, res, next) => {
     try {
-      const { content, image } = req.body;
+      const { content, images } = req.body;
       const { id: UserId } = req.user;
       const hashtags = content.match(/#[^\s#]+/g);
       const post = await Post.create({ content, UserId });
@@ -47,12 +17,13 @@ router.post('/', // POST /post
         })));
         await post.addHashtags(result.map(v => v[0]));
       }
-      const uploadedImage = await Promise.all(image.map(img => Image.create({ src: img.src })));
+      const uploadedImage = await Promise.all(images.map(img => Image.create({ src: img.src })));
       await post.addImages(uploadedImage);
       const fullPost = await Post.findOrCreate({
         where: { id: post.id },
         include: [{
           model: Image,
+          attributes: ['id', 'src'],
         }, {
           model: User,
           attributes: ['id', 'nickname', 'avatar'],
@@ -68,7 +39,7 @@ router.post('/', // POST /post
           attributes: ['id'],
         }]
       });
-      res.status(201).json(fullPost);
+      res.status(201).json(fullPost[0]);
     } catch (error) {
       console.error(error);
       next(error);
@@ -82,10 +53,54 @@ router.delete('/:postId',
     try {
       const { postId } = req.params;
       const { id: UserId } = req.user;
-      const post = await Post.destroy({
+      await Post.destroy({
         where: { id: postId, UserId }
       });
       res.status(200).send(postId);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+);
+
+router.put('/:postId', // PUT /post/1
+  passport.authenticate('jwt', { session: false }), 
+  async (req, res, next) => {
+    try {
+      const { content, images } = req.body;
+      const { postId: PostId } = req.params;
+      // const { id: UserId } = req.user;
+      const hashtags = content.match(/#[^\s#]+/g);
+      const post = await Post.findOne({ where: { id: PostId }});
+      // 해시태그 변경
+      const exHashtag = await post.getHashtags();
+      if (exHashtag) { // 삭제한 해시태그 삭제
+        const removeHashtag = exHashtag.filter((t, i) => '#' + t.content !== hashtags[i]);
+        await post.removeHashtags(removeHashtag);
+      }
+      if (hashtags) {
+        const result = await Promise.all(hashtags.map(tag => Hashtag.findOrCreate({
+          where: { content: tag.slice(1).toLowerCase() },
+        })));
+        await post.addHashtags(result.map(v => v[0]));
+      }
+      // 이미지 변경
+      const uploadedImages = [];
+      const exImage = await post.getImages();
+      if (images.every((img, i) => img !== exImage[i].src)) { //이미지 변경이 있을 경우
+        await Image.destroy({ where: { PostId }});
+        const uploadImg = await Promise.all(images.map(img => Image.create({ src: img.src })));
+        await post.addImages(uploadImg);
+        uploadImg.forEach(v => uploadedImages.push(v));
+      } else { // 이미지를 변경하지 않는 경우
+        exImage.forEach(v => uploadedImages.push(v));
+      }
+      // 본문 내용 변경
+      await Post.update({ content }, { 
+        where: { id: post.id }
+      });
+      res.status(201).json({ content, images: uploadedImages });
     } catch (error) {
       console.error(error);
       next(error);

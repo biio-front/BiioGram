@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, Input } from 'semantic-ui-react';
 import AuthCard from '../components/auth/AuthCard';
 import AuthLinkCard from '../components/auth/AuthLinkCard';
-import { loginRequest } from '../redux/user/userSlice';
+import { loginRequest, enterGuest } from '../redux/user/userSlice';
 import { useInput } from '../hooks/useInput';
 import styled from 'styled-components';
 
@@ -13,9 +13,12 @@ const Auth = () => {
   const dispatch = useDispatch();
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
+
   const onSubmit = useCallback(() => {
     dispatch(loginRequest({ email, password }));
   }, [email, password]);
+
+  const onGuest = useCallback(() => dispatch(enterGuest()), []);
 
   return (
     <>
@@ -45,8 +48,13 @@ const Auth = () => {
         {loginError && '이메일이나 비밀번호를 확인해주세요.'}
       </AuthCard>
       <AuthLinkCard question="계정이 없으신가요?">
-        <Link href="/signUp">가입하기</Link>
+        <Link href="/signUp">
+          <a>가입하기</a>
+        </Link>
       </AuthLinkCard>
+      <s.p onClick={onGuest}>
+        <a>로그인 없이 이용하기</a>
+      </s.p>
     </>
   );
 };
@@ -54,5 +62,10 @@ const Auth = () => {
 const s = {};
 s.Button = styled(Button)`
   width: 100%;
+`;
+s.p = styled.p`
+  font-size: 0.9rem;
+  text-align: center;
+  cursor: pointer;
 `;
 export default Auth;

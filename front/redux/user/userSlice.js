@@ -154,6 +154,13 @@ const slice = createSlice({
       state.removeFollowLoading = false;
       state.removeFollowError = error;
     },
+    enterGuest(state) {
+      state.me = {
+        id: 0,
+        nickname: 'guest',
+        Followings: [],
+      };
+    },
   },
 });
 
@@ -180,4 +187,5 @@ export const {
   removeFollowRequest,
   removeFollowSuccess,
   removeFollowFail,
+  enterGuest,
 } = slice.actions;

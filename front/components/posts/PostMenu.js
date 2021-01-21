@@ -8,7 +8,7 @@ import { preupdatePost, removePostRequest } from '../../redux/post/postSlice';
 import { addFollowRequest, removeFollowRequest } from '../../redux/user/userSlice';
 import Link from 'next/link';
 
-const PostMenu = ({ userId, postId, nickname }) => {
+const PostMenu = ({ userId, postId }) => {
   const {
     addFollowLoading,
     removeFollowLoading,
@@ -52,7 +52,11 @@ const PostMenu = ({ userId, postId, nickname }) => {
         </>
       ) : (
         <>
-          <List.Item onClick={onToggleFollow}>
+          <List.Item
+            onClick={() =>
+              id ? onToggleFollow() : window.alert('로그인이 필요한 서비스입니다.')
+            }
+          >
             {addFollowLoading || removeFollowLoading ? (
               <Loader active inline="centered" />
             ) : follow ? (
@@ -78,6 +82,5 @@ s.div = styled.div`
 PostMenu.propTypes = {
   userId: PropTypes.number.isRequired,
   postId: PropTypes.number.isRequired,
-  nickname: PropTypes.string.isRequired,
 };
 export default PostMenu;

@@ -12,10 +12,10 @@ import PostCardHead from './PostCardHead';
 
 const PostCard = ({ user, content, Images, comments, postId, Likers }) => {
   const dispatch = useDispatch();
-  const { id: myId } = useSelector((state) => state.user.me);
+  const { id } = useSelector((state) => state.user.me);
 
   const [toggleComment, setToggleComment] = useState(false);
-  const [hearted, setHearted] = useState(Likers.find((v) => v.id === myId));
+  const [hearted, setHearted] = useState(Likers.find((v) => v.id === id));
 
   const onToggleHeart = useCallback(() => {
     dispatch(hearted ? removeLikersRequest(postId) : addLikersRequest(postId));
@@ -41,7 +41,9 @@ const PostCard = ({ user, content, Images, comments, postId, Likers }) => {
           name={hearted ? 'heart' : 'heart outline'}
           size="large"
           color={hearted ? 'red' : 'black'}
-          onClick={onToggleHeart}
+          onClick={() =>
+            id ? onToggleHeart() : window.alert('로그인이 필요한 서비스입니다.')
+          }
         />
         <Icon
           name="comment outline"

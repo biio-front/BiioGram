@@ -6,16 +6,22 @@ import 'semantic-ui-css/semantic.min.css';
 import styled from 'styled-components';
 import NavMenu from './NavMenu';
 import Avatar from '../common/Avatar';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutSuccess } from '../../redux/user/userSlice';
 
 const AppLayout = ({ children }) => {
-  const { avatar } = useSelector((state) => state.user.me);
+  const { avatar, id } = useSelector((state) => state.user.me);
   const [oepnMenu, setOpenMenu] = useState(false);
+  const dispatch = useDispatch();
 
   const onClick = useCallback(() => {
     setOpenMenu((prev) => !prev);
   }, []);
 
+  const onNeedLogin = useCallback(() => {
+    window.alert('로그인이 필요한 서비스입니다. 로그인화면으로 이동합니다.');
+    dispatch(logoutSuccess());
+  }, []);
   return (
     <>
       <s.header>
@@ -25,7 +31,7 @@ const AppLayout = ({ children }) => {
               <a>BiioGram</a>
             </Link>
           </Header>
-          <div className="menu">
+          <div className="menu" onClick={!id ? onNeedLogin : undefined}>
             <Link href="/post/create">
               <a>
                 <Icon name="plus" size="large" />
@@ -39,7 +45,7 @@ const AppLayout = ({ children }) => {
         {oepnMenu && <NavMenu />}
       </s.header>
       <section>{children}</section>
-      <footer>&copy; 2020 biio All rights reserved</footer>
+      <footer>&copy; 2021 biio All rights reserved</footer>
     </>
   );
 };

@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
-import { addFollowRequest } from '../../redux/user/userSlice';
+import { addFollowRequest, logoutSuccess } from '../../redux/user/userSlice';
 import Avatar from '../common/Avatar';
 import PostMenu from './PostMenu';
 import PropTypes from 'prop-types';
@@ -13,7 +13,13 @@ const PostCardHead = ({ userId, nickname, avatar, postId }) => {
   const dispatch = useDispatch();
 
   const [openMenu, setOpenMenu] = useState(false);
-  const onFollow = useCallback(() => dispatch(addFollowRequest(userId)), []);
+  const onFollow = useCallback(() => {
+    if (id) {
+      dispatch(addFollowRequest(userId));
+    } else {
+      window.alert('로그인이 필요한 서비스입니다.');
+    }
+  }, []);
   const onToggleMenu = useCallback(() => {
     setOpenMenu((prev) => !prev);
   }, []);

@@ -8,7 +8,7 @@ import { useInput } from '../../hooks/useInput';
 import PropTypes from 'prop-types';
 
 const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
-  const { me } = useSelector((state) => state.user);
+  const { id, nickname, avatar } = useSelector((state) => state.user.me);
   const dispatch = useDispatch();
   const [newComment, setNewComment] = useState(null);
   const [open, setOpen] = useState(false);
@@ -29,8 +29,12 @@ const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
   }, []);
 
   const onSubmit = useCallback(() => {
-    dispatch(addCommentRequest({ postId, content: text }));
-    setNewComment(text);
+    if (id) {
+      dispatch(addCommentRequest({ postId, content: text }));
+      setNewComment(text);
+    } else {
+      window.alert('로그인이 필요한 서비스입니다.');
+    }
     setText('');
   }, [text]);
   return (
@@ -58,9 +62,9 @@ const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
           <CommentList
             postId={postId}
             commentId={comments.length + 1}
-            userId={me.id}
-            nickname={me.nickname}
-            avatar={me.avatar}
+            userId={id}
+            nickname={nickname}
+            avatar={avatar}
             content={newComment}
           />
         </List>

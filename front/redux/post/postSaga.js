@@ -31,12 +31,12 @@ import {
 } from './postSlice';
 import { resetImagePaths } from '../image/imageSlice';
 
-function loadPostsAPI() {
-  return axios.get('/posts');
+function loadPostsAPI(lastId) {
+  return axios.get(`/posts?lastId=${lastId || 0}`);
 }
-function* loadPosts() {
+function* loadPosts({ payload }) {
   try {
-    const result = yield call(loadPostsAPI);
+    const result = yield call(loadPostsAPI, payload);
     yield put(loadPostsSuccess(result.data));
   } catch (err) {
     console.log(err);
@@ -50,7 +50,6 @@ function loadHashtagPostsAPI(data) {
 function* loadHashtagPosts({ payload }) {
   try {
     const result = yield call(loadHashtagPostsAPI, payload);
-    console.log(result.data);
     yield put(loadHashtagPostsSuccess(result.data));
   } catch (err) {
     console.log(err);
@@ -74,7 +73,7 @@ function* addPost({ payload }) {
 
 function updatePostAPI(data) {
   const { postId } = data;
-  return axios.put(`/post/${postId}`, data);
+  return axios.patch(`/post/${postId}`, data);
 }
 function* updatePost({ payload }) {
   try {

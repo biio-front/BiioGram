@@ -6,11 +6,11 @@ import { Button, Form, Input } from 'semantic-ui-react';
 import styled from 'styled-components';
 import AuthCard from '../components/auth/AuthCard';
 import AuthLinkCard from '../components/auth/AuthLinkCard';
-import { signUpRequest } from '../redux/user/userSlice';
+import { resetSignUp, signUpRequest } from '../redux/user/userSlice';
 import { useInput } from '../hooks/useInput';
 
 const SignUp = () => {
-  const { me, signUpLoading, signUpDone, signUpError } = useSelector(
+  const { me, signUpLoading, signUpError, signUpDone } = useSelector(
     (state) => state.user,
   );
   const dispatch = useDispatch();
@@ -28,7 +28,11 @@ const SignUp = () => {
   }, [me]);
 
   useEffect(() => {
-    signUpDone && Router.replace('/');
+    if (signUpDone) {
+      Router.replace('/');
+    } else {
+      dispatch(resetSignUp());
+    }
   }, [signUpDone]);
 
   const onChangeTerm = useCallback((e) => {

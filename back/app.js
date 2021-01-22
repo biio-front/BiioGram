@@ -6,6 +6,7 @@ const path = require('path');
 const passport = require('passport');
 const passportConfig = require('./passport');
 
+const authRouter = require('./routes/auth.js');
 const userRouter = require('./routes/user.js');
 const postRouter = require('./routes/post.js');
 const postsRouter = require('./routes/posts.js');
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
   res.send('hello express');
 });
 
+app.use('/auth', authRouter);
 app.use('/user', userRouter);
 app.use('/post', postRouter);
 app.use('/posts', postsRouter);

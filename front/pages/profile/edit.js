@@ -20,8 +20,15 @@ const EditProfile = () => {
 
   const onSubmit = useCallback(() => {
     const userId = me.id;
-    dispatch(editProfileRequest({ src: imagePaths[0]?.src, nickname, desc, userId }));
-    Router.replace('/profile');
+    dispatch(
+      editProfileRequest({
+        src: imagePaths && imagePaths[0].src,
+        nickname,
+        desc,
+        userId,
+      }),
+    );
+    Router.replace(`/profile/${me.id}`);
   }, [imagePaths, nickname, desc]);
 
   return (

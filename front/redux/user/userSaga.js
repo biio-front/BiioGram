@@ -33,13 +33,13 @@ function* loadMyInfo() {
     const result = yield call(loadMyInfoAPI);
     yield put(loadMyInfoSuccess(result.data));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(loadMyInfoFail(err));
   }
 }
 
 function loginAPI(data) {
-  return axios.post('/user/login', data);
+  return axios.post('/auth/login', data);
 }
 function* login({ payload }) {
   try {
@@ -48,33 +48,34 @@ function* login({ payload }) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
     yield put(loginSuccess(result.data.me));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(loginFail(err));
   }
 }
 
 function logoutAPI() {
-  return axios.delete('/user/logout');
+  return axios.delete('/auth/logout');
 }
 function* logout() {
   try {
     const result = yield call(logoutAPI);
+    axios.defaults.headers.common['Authorization'] = '';
     yield put(logoutSuccess(result));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(logoutFail(err));
   }
 }
 
 function signUpAPI(data) {
-  return axios.post('/user/signup', data);
+  return axios.post('/auth/signup', data);
 }
 function* signUp({ payload }) {
   try {
     yield call(signUpAPI, payload);
     yield put(signUpSuccess());
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(signUpFail(err));
   }
 }
@@ -89,7 +90,7 @@ function* editProfile({ payload }) {
     yield put(editProfileSuccess(result.data));
     yield put(resetImagePaths());
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(editProfileFail(err));
   }
 }
@@ -102,7 +103,7 @@ function* addFollow({ payload }) {
     const result = yield call(addFollowAPI, payload);
     yield put(addFollowSuccess(result.data));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(addFollowFail(err));
   }
 }
@@ -115,7 +116,7 @@ function* removeFollow({ payload }) {
     const result = yield call(removeFollowAPI, payload);
     yield put(removeFollowSuccess(result.data));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(removeFollowFail(err));
   }
 }

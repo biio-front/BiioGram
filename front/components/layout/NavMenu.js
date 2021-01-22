@@ -29,20 +29,20 @@ const NavMenu = () => {
 
   return (
     <DropDownMenu top="64px">
-      <List.Item onClick={!id ? onNeedLogin : undefined}>
-        <Link href={id ? `/profile/${id}` : '/auth'}>
-          <a>
+      <Link href={id ? `/profile/${id}` : '/auth'}>
+        <a>
+          <List.Item onClick={!id ? onNeedLogin : undefined}>
             <Icon name="user circle" /> 프로필
-          </a>
-        </Link>
-      </List.Item>
-      <List.Item onClick={!id ? onNeedLogin : undefined}>
-        <Link href={id ? '/profile/edit' : '/auth'}>
-          <a>
+          </List.Item>
+        </a>
+      </Link>
+      <Link href={id ? '/profile/edit' : '/auth'}>
+        <a>
+          <List.Item onClick={!id ? onNeedLogin : undefined}>
             <Icon name="setting" /> 프로필 설정
-          </a>
-        </Link>
-      </List.Item>
+          </List.Item>
+        </a>
+      </Link>
       <List.Item onClick={onLogout}>
         {logoutLoading ? (
           <Loader active inline="centered" />

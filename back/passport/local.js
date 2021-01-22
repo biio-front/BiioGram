@@ -20,7 +20,7 @@ const passportVerify = async (email, password, done) => {
     }
     const result = await bcrypt.compare(password, user.password);
     if (!result) {
-      return done(null, false, { reason: '비밀번호를 잘못입력하셨습니다..' });
+      return done(null, false, { reason: '비밀번호를 잘못입력하셨습니다.' });
     }
     return done(null, user);
   } catch (error) {

@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Grid, Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
-import { addFollowRequest, logoutSuccess } from '../../redux/user/userSlice';
+import { addFollowRequest } from '../../redux/user/userSlice';
 import Avatar from '../common/Avatar';
 import PostMenu from './PostMenu';
 import PropTypes from 'prop-types';
@@ -44,7 +44,7 @@ const PostCardHead = ({ userId, nickname, avatar, postId }) => {
             <b>{nickname}</b>
             {userId === id ||
               (!Followings.find((v) => v.id === userId) && (
-                <a onClick={onFollow}>팔로우하기</a>
+                <a onClick={onFollow}>· 팔로우하기</a>
               ))}
           </span>
         </Grid.Column>

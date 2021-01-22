@@ -29,7 +29,6 @@
       {
         "endOfLine": "auto"
       }
-    ],
-    "react-hooks/rules-of-hooks": "error",
+    ]
   }
 }

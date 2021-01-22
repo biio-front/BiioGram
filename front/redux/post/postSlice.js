@@ -44,7 +44,8 @@ const slice = createSlice({
     loadPostsSuccess(state, { payload }) {
       state.loadPostsLoading = false;
       state.loadPostsDone = true;
-      state.mainPosts = payload;
+      state.hasMorePosts = payload.length === 5;
+      state.mainPosts.push(...payload);
     },
     loadPostsFail(state, { payload: error }) {
       console.log(error);
@@ -59,7 +60,7 @@ const slice = createSlice({
     loadHashtagPostsSuccess(state, { payload }) {
       state.loadHashtagPostsLoading = false;
       state.loadHashtagPostsDone = true;
-      state.mainPosts = payload;
+      state.mainPosts.push(...payload);
       console.log(payload);
     },
     loadHashtagPostsFail(state, { payload: error }) {
@@ -72,9 +73,11 @@ const slice = createSlice({
       state.addPostDone = false;
       state.addPostError = null;
     },
-    addPostSuccess(state) {
+    addPostSuccess(state, { payload }) {
+      console.log(payload);
       state.addPostLoading = false;
       state.addPostDone = true;
+      state.mainPosts.splice(0, 0, payload);
     },
     addPostFail(state, { payload: error }) {
       console.log(error);
@@ -183,6 +186,9 @@ const slice = createSlice({
       state.removeLikersLoading = false;
       state.removeLikersError = error;
     },
+    resetPostForm(state) {
+      state.addPostDone = false;
+    },
   },
 });
 
@@ -216,4 +222,5 @@ export const {
   removeLikersRequest,
   removeLikersSuccess,
   removeLikersFail,
+  resetPostForm,
 } = slice.actions;

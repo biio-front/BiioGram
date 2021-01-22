@@ -14,6 +14,7 @@ router.get('/:tag', async (req, res, next) => { // GET /hashtag/[tag]
         model: Hashtag,
         as: 'Hashtags',
         where: { content: decodeURIComponent(tag) },
+        through: { attributes: [] },
       }, {
         model: User,
         attributes: ['id', 'nickname', 'avatar'],
@@ -29,6 +30,7 @@ router.get('/:tag', async (req, res, next) => { // GET /hashtag/[tag]
         model: User, // 좋아요 누른 사람
         as: 'Likers',
         attributes: ['id', 'nickname', 'avatar'],
+        through: { attributes: [] },
       }]
     });
     res.status(200).json(posts);

@@ -11,12 +11,14 @@ router.post('/', // POST /post
       const { id: UserId } = req.user;
       const hashtags = content.match(/#[^\s#]+/g);
       const post = await Post.create({ content, UserId });
+      // 해시태그 테이블에 저장
       if (hashtags) {
         const result = await Promise.all(hashtags.map(tag => Hashtag.findOrCreate({
           where: { content: tag.slice(1).toLowerCase() },
         })));
         await post.addHashtags(result.map(v => v[0]));
       }
+      // 업로드한 이미지를 이미지 테이블에 저장
       const uploadedImage = await Promise.all(images.map(img => Image.create({ src: img.src })));
       await post.addImages(uploadedImage);
       const fullPost = await Post.findOrCreate({
@@ -37,6 +39,7 @@ router.post('/', // POST /post
           model: User, // 좋아요 누른 사람
           as: 'Likers',
           attributes: ['id', 'nickname', 'avatar'],
+          through: { attributes: [] },
         }]
       });
       res.status(201).json(fullPost[0]);
@@ -47,7 +50,7 @@ router.post('/', // POST /post
   }
 );
 
-router.delete('/:postId',
+router.delete('/:postId',  // DELETE /post/1
   passport.authenticate('jwt', { session: false }), 
   async (req, res, next) => {
     try {
@@ -64,13 +67,12 @@ router.delete('/:postId',
   }
 );
 
-router.put('/:postId', // PUT /post/1
+router.patch('/:postId', // PATCH /post/1
   passport.authenticate('jwt', { session: false }), 
   async (req, res, next) => {
     try {
       const { content, images } = req.body;
       const { postId } = req.params;
-      // const { id: UserId } = req.user;
       const hashtags = content.match(/#[^\s#]+/g);
       const post = await Post.findOne({ where: { id: postId }});
       // 해시태그 변경

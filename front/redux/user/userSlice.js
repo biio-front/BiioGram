@@ -161,6 +161,9 @@ const slice = createSlice({
         Followings: [],
       };
     },
+    resetSignUp(state) {
+      state.signUpDone = false;
+    },
   },
 });
 
@@ -188,4 +191,5 @@ export const {
   removeFollowSuccess,
   removeFollowFail,
   enterGuest,
+  resetSignUp,
 } = slice.actions;

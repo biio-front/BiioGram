@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, Icon, TextArea } from 'semantic-ui-react';
 import styled from 'styled-components';
 import AppLayout from '../layout/AppLayout';
-import { addPostRequest, updatePostRequest } from '../../redux/post/postSlice';
+import {
+  addPostRequest,
+  resetPostForm,
+  updatePostRequest,
+} from '../../redux/post/postSlice';
 import { useInput } from '../../hooks/useInput';
 import useUploadImages from '../../hooks/useUploadImages';
 import PropTypes from 'prop-types';
@@ -19,7 +23,11 @@ const PostForm = ({ post }) => {
   const [text, onChangeText, setText] = useInput(post?.content);
 
   useEffect(() => {
-    addPostDone && setText('');
+    if (addPostDone) {
+      Router.replace('/');
+      setText('');
+    }
+    dispatch(resetPostForm());
   }, [addPostDone]);
 
   const onSubmit = useCallback(() => {
@@ -30,7 +38,6 @@ const PostForm = ({ post }) => {
           updatePostRequest({ content: text, images: imagePaths, postId: post.id }),
         )
       : dispatch(addPostRequest({ content: text, images: imagePaths }));
-    Router.push('/');
   }, [text, imagePaths]);
   return (
     <>

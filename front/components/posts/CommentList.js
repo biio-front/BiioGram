@@ -15,13 +15,6 @@ const CommentList = ({ nickname, avatar, content, userId, commentId, postId }) =
     () => dispatch(removeCommentRequest({ postId, commentId })),
     [],
   );
-  const getTime = () => {
-    const getToday = new Date();
-    const year = getToday.getFullYear();
-    const month = getToday.getMonth();
-    const date = getToday.getDate();
-    return `${year}년 ${month + 1}월 ${date}일`;
-  };
 
   return (
     <>
@@ -29,27 +22,16 @@ const CommentList = ({ nickname, avatar, content, userId, commentId, postId }) =
         <Link href={`/profile/${userId}`}>
           <s.a>
             <Avatar src={avatar} size="28" />
-            {/* <Image
-              src={
-                avatar ||
-                'https://react.semantic-ui.com/images/wireframe/square-image.png'
-              }
-              avatar
-            /> */}
           </s.a>
         </Link>
-        <List.Content>
+        <s.Content>
           <List.Header>
             {nickname}
-            <s.date>{getTime()}</s.date>
+            {/* <s.date>{getTime()}</s.date> */}
           </List.Header>
           <p>{content}</p>
-        </List.Content>
-        {userId === me.id && (
-          <s.remove floated="right" onClick={onRemove}>
-            <List.Icon name="delete" color="red" />
-          </s.remove>
-        )}
+          {userId === me.id && <s.remove name="delete" color="red" onClick={onRemove} />}
+        </s.Content>
       </List.Item>
     </>
   );
@@ -67,12 +49,21 @@ s.date = styled.span`
   margin-bottom: 0;
   color: #aaa;
 `;
-s.remove = styled(List.Content)`
+s.Content = styled(List.Content)`
+  position: relative;
+  & p {
+    margin-bottom: 0;
+  }
+`;
+s.remove = styled(List.Icon)`
   cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
 `;
 CommentList.propTypes = {
   nickname: PropTypes.string.isRequired,
-  avatar: PropTypes.string.isRequired,
+  avatar: PropTypes.string,
   content: PropTypes.string.isRequired,
   userId: PropTypes.number.isRequired,
   commentId: PropTypes.number.isRequired,

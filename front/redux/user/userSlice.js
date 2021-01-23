@@ -28,6 +28,12 @@ const slice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    getAccessToken() {
+      console.log(';');
+      // state.loadMyInfoLoading = true;
+      // state.loadMyInfoDone = false;
+      // state.loadMyInfoError = null;
+    },
     loadMyInfoRequest(state) {
       state.loadMyInfoLoading = true;
       state.loadMyInfoDone = false;
@@ -154,13 +160,6 @@ const slice = createSlice({
       state.removeFollowLoading = false;
       state.removeFollowError = error;
     },
-    enterGuest(state) {
-      state.me = {
-        id: 0,
-        nickname: 'guest',
-        Followings: [],
-      };
-    },
     resetSignUp(state) {
       state.signUpDone = false;
     },
@@ -169,6 +168,7 @@ const slice = createSlice({
 
 export default slice.reducer;
 export const {
+  getAccessToken,
   loadMyInfoRequest,
   loadMyInfoSuccess,
   loadMyInfoFail,
@@ -190,6 +190,5 @@ export const {
   removeFollowRequest,
   removeFollowSuccess,
   removeFollowFail,
-  enterGuest,
   resetSignUp,
 } = slice.actions;

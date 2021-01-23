@@ -82,6 +82,7 @@ router.get('/', // GET /user  // 내 정보 가져오기
           model: User,
           as: 'Followings',
           attributes: ['id'],
+          through: { attributes: [] },
         }]
       });
       res.json(fullUserWithoutPassword);
@@ -107,6 +108,7 @@ router.get('/:userId/posts', async (req, res, next) => { // GET /user/1/posts
         model: User,
         as: 'Likers',
         attributes: ['id'],
+        through: { attributes: [] },
       }]
     });
     res.status(200).json(posts);

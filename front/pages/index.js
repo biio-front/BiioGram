@@ -1,15 +1,11 @@
-import Router from 'next/router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
-import Posts from '../components/posts/Posts';
-import { loadPostsRequest } from '../redux/post/postSlice';
 import Auth from './auth';
+import Home from './home';
 
 const App = () => {
   const { me } = useSelector((state) => state.user);
-  const router = Router;
-  useEffect(() => !me && router.replace('/'), [me]);
-  return <>{me ? <Posts whatPosts={loadPostsRequest} /> : <Auth />}</>;
+  return <>{me ? <Home /> : <Auth />}</>;
 };
 
 export default App;

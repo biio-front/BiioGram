@@ -60,8 +60,8 @@ const slice = createSlice({
     loadHashtagPostsSuccess(state, { payload }) {
       state.loadHashtagPostsLoading = false;
       state.loadHashtagPostsDone = true;
+      state.hasMorePosts = payload.length === 5;
       state.mainPosts.push(...payload);
-      console.log(payload);
     },
     loadHashtagPostsFail(state, { payload: error }) {
       console.log(error);

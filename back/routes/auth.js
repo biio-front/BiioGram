@@ -1,4 +1,4 @@
-const { User } = require('../models');
+const { User, Token } = require('../models');
 const express = require('express');
 const router = express.Router();
 
@@ -65,17 +65,15 @@ router.post('/login', async (req, res, next) => { // POST /user/login
         }]
       });
       const refreshToken = jwt.sign(
-        { id: user.id },
-        process.env.JWT_SECRET,
-        { expiresIn: '14d' },
+        { id }, process.env.JWT_SECRET, { expiresIn: '14d' },
       );
-      // DB에 refreshToken 저장...?
+      await Token.create({
+        userId: id, refreshToken
+      });
       const accessToken = jwt.sign(
-        { id: user.id }, 
-        process.env.JWT_SECRET, 
-        { expiresIn: '5m' },
+        { id }, process.env.JWT_SECRET, { expiresIn: '5m' },
       );
-      res.cookie('RefreshToken', refreshToken, { httpOnly: true, secure: true });
+      res.cookie('RefreshToken', refreshToken, { httpOnly: true, /*secure: true*/ });
       return res.status(200).json({ me: fullUserWithoutPassword, token: accessToken });
     });
   })(req, res, next);
@@ -86,5 +84,31 @@ router.delete('/logout', (req, res) => { // DELETE /user/logout
   res.clearCookie('RefreshToken');
   res.status(200).send('logout');
 });
+
+router.get('/refresh-token', // GET /auth/refreshToken  // 내 정보 가져오기
+  passport.authenticate('jwt', { session: false }), 
+  async (req, res, next) => { 
+    try {
+      console.log(req.cookies);
+      // const { id } = req.user;
+      // const fullUserWithoutPassword = await User.findOne({
+      //   where: { id },
+      //   attributes: {
+      //     exclude: ['password']
+      //   },
+      //   include: [{
+      //     model: User,
+      //     as: 'Followings',
+      //     attributes: ['id'],
+      //     through: { attributes: [] },
+      //   }]
+      // });
+      // res.json(fullUserWithoutPassword);
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
+  }
+);
 
 module.exports = router;

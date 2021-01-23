@@ -11,7 +11,7 @@ const store = () => {
     middleware: [sagaMiddleware],
     devTools: process.env.NODE_ENV === 'development',
   });
-  sagaMiddleware.run(rootSaga);
+  store.sagaTask = sagaMiddleware.run(rootSaga);
 
   return store;
 };

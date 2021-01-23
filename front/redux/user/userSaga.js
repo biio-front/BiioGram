@@ -23,7 +23,22 @@ import {
   loadMyInfoRequest,
   loadMyInfoSuccess,
   loadMyInfoFail,
+  getAccessToken,
 } from './userSlice';
+
+function getAccessTokenAPI() {
+  return axios.post('/auth/refresh-token');
+}
+function* getAccessTokenSaga() {
+  try {
+    const result = yield call(getAccessTokenAPI);
+    console.log(result.data.token);
+    // yield put(loadMyInfoSuccess(result.data));
+  } catch (err) {
+    console.error(err);
+    // yield put(loadMyInfoFail(err));
+  }
+}
 
 function loadMyInfoAPI() {
   return axios.get('/user');
@@ -121,6 +136,9 @@ function* removeFollow({ payload }) {
   }
 }
 
+export function* watchGetAccessToken() {
+  yield takeLatest(getAccessToken, getAccessTokenSaga);
+}
 export function* watchLoadMyInfo() {
   yield takeLatest(loadMyInfoRequest, loadMyInfo);
 }
@@ -145,6 +163,7 @@ export function* watchRemoveFollow() {
 
 export default function* userSaga() {
   yield all([
+    fork(watchGetAccessToken),
     fork(watchLoadMyInfo),
     fork(watchLogin),
     fork(watchLogout),

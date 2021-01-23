@@ -13,7 +13,7 @@ import { useRouter } from 'next/router';
 const Profile = () => {
   const router = useRouter();
   const { userId } = router.query;
-  const { id } = useSelector((state) => state.user.me);
+  const { me } = useSelector((state) => state.user);
 
   const { data: userInfo, error: userInfoError } = useSWR(
     `http://localhost:3055/user/${userId}/`,
@@ -41,7 +41,7 @@ const Profile = () => {
           <ProfileHead
             avatar={userInfo?.avatar}
             nickname={userInfo?.nickname}
-            edit={parseInt(userId, 10) === id ? '수정하기' : null}
+            edit={parseInt(userId, 10) === me?.id ? '수정하기' : null}
           >
             {/* 프로필 상단 오른쪽 */}
             <s.List horizontal>
@@ -67,7 +67,7 @@ const Profile = () => {
                     <PostImg
                       src={v.Images[0].src}
                       commentLen={v.Comments.length}
-                      postId={v.id}
+                      likersLen={v.Likers.length}
                     />
                   </Grid.Column>
                 ))}
@@ -79,6 +79,7 @@ const Profile = () => {
     </>
   );
 };
+
 const s = {};
 s.profile = styled.div`
   max-width: 800px;

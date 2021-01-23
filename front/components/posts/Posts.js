@@ -9,7 +9,6 @@ const Posts = ({ whatPosts, query }) => {
     (state) => state.post,
   );
   const dispatch = useDispatch();
-  useEffect(() => dispatch(whatPosts(query)), []);
 
   useEffect(() => {
     function onScroll() {
@@ -18,7 +17,7 @@ const Posts = ({ whatPosts, query }) => {
       if (pageYOffset + clientHeight > scrollHeight - 300) {
         if (hasMorePosts && !loadPostsLoading) {
           const lastId = mainPosts[mainPosts.length - 1]?.id;
-          dispatch(whatPosts(lastId));
+          dispatch(whatPosts({ lastId, query }));
         }
       }
     }

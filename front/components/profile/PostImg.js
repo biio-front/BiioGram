@@ -2,10 +2,8 @@ import React, { useMemo } from 'react';
 import { Icon } from 'semantic-ui-react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
 
-const PostImg = ({ src, commentLen, postId }) => {
-  const { mainPosts } = useSelector((state) => state.post);
+const PostImg = ({ src, commentLen, likersLen }) => {
   const style = useMemo(
     () => ({
       background: `url(${src})`,
@@ -22,7 +20,7 @@ const PostImg = ({ src, commentLen, postId }) => {
           <div>
             <span>
               <Icon name="heart outline" />
-              {mainPosts.find((v) => v.id === postId).Likers.length}
+              {likersLen}
             </span>
             <span>
               <Icon name="comment outline" />
@@ -72,8 +70,8 @@ s.container = styled.div`
   }
 `;
 PostImg.propTypes = {
-  postId: PropTypes.number.isRequired,
   src: PropTypes.string.isRequired,
   commentLen: PropTypes.number.isRequired,
+  likersLen: PropTypes.number.isRequired,
 };
 export default PostImg;

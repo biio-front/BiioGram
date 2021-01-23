@@ -5,16 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Icon, List, Loader } from 'semantic-ui-react';
 import { logoutRequest, logoutSuccess } from '../../redux/user/userSlice';
 import DropDownMenu from '../common/DropDownMenu';
+import { onNeedLogin } from '../common/onNeedLogin';
 
 const NavMenu = () => {
-  const {
-    logoutLoading,
-    me: { id },
-  } = useSelector((state) => state.user);
+  const { logoutLoading, me } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const onLogout = useCallback(() => {
-    if (id) {
+    if (me?.id) {
       dispatch(logoutRequest());
     } else {
       dispatch(logoutSuccess());
@@ -22,23 +20,18 @@ const NavMenu = () => {
     Router.push('/');
   }, []);
 
-  const onNeedLogin = useCallback(() => {
-    window.alert('로그인이 필요한 서비스입니다. 로그인화면으로 이동합니다.');
-    dispatch(logoutSuccess());
-  }, []);
-
   return (
     <DropDownMenu top="64px">
-      <Link href={id ? `/profile/${id}` : '/auth'}>
+      <Link href={me?.id ? `/profile/${me.id}` : '/auth'}>
         <a>
-          <List.Item onClick={!id ? onNeedLogin : undefined}>
+          <List.Item onClick={!me?.id ? onNeedLogin : undefined}>
             <Icon name="user circle" /> 프로필
           </List.Item>
         </a>
       </Link>
-      <Link href={id ? '/profile/edit' : '/auth'}>
+      <Link href={me?.id ? '/profile/edit' : '/auth'}>
         <a>
-          <List.Item onClick={!id ? onNeedLogin : undefined}>
+          <List.Item onClick={!me?.id ? onNeedLogin : undefined}>
             <Icon name="setting" /> 프로필 설정
           </List.Item>
         </a>
@@ -46,7 +39,7 @@ const NavMenu = () => {
       <List.Item onClick={onLogout}>
         {logoutLoading ? (
           <Loader active inline="centered" />
-        ) : id ? (
+        ) : me?.id ? (
           '로그아웃'
         ) : (
           '로그인하기'

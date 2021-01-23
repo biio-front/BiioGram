@@ -14,6 +14,7 @@ const imagesRouter = require('./routes/images.js');
 const hashtagRouter = require('./routes/hashtag.js');
 
 const db = require('./models');
+const cookieParser = require('cookie-parser');
 const app = express();
 
 db.sequelize.sync()
@@ -34,6 +35,8 @@ app.use('/', express.static(path.join(__dirname, 'uploads')));
 // parse json and url-encoded query
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.use(passport.initialize());
 passportConfig();

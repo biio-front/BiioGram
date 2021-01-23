@@ -31,7 +31,7 @@ import {
 } from './postSlice';
 import { resetImagePaths } from '../image/imageSlice';
 
-function loadPostsAPI(lastId) {
+function loadPostsAPI({ lastId }) {
   return axios.get(`/posts?lastId=${lastId || 0}`);
 }
 function* loadPosts({ payload }) {
@@ -39,20 +39,20 @@ function* loadPosts({ payload }) {
     const result = yield call(loadPostsAPI, payload);
     yield put(loadPostsSuccess(result.data));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(loadPostsFail(err));
   }
 }
 
-function loadHashtagPostsAPI(data) {
-  return axios.get(`/hashtag/${data}`);
+function loadHashtagPostsAPI({ lastId, query }) {
+  return axios.get(`/hashtag/${query}?lastId=${lastId}`);
 }
 function* loadHashtagPosts({ payload }) {
   try {
     const result = yield call(loadHashtagPostsAPI, payload);
     yield put(loadHashtagPostsSuccess(result.data));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(loadHashtagPostsFail(err));
   }
 }
@@ -66,7 +66,7 @@ function* addPost({ payload }) {
     yield put(addPostSuccess(result.data));
     yield put(resetImagePaths());
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(addPostFail(err));
   }
 }
@@ -81,7 +81,7 @@ function* updatePost({ payload }) {
     yield put(updatePostSuccess(result.data));
     yield put(resetImagePaths());
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(updatePostFail(err));
   }
 }
@@ -94,7 +94,7 @@ function* removePost({ payload }) {
     const result = yield call(removePostAPI, payload);
     yield put(removePostSuccess(result.data));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(removePostFail(err));
   }
 }
@@ -107,7 +107,7 @@ function* addComment({ payload }) {
     const result = yield call(addCommentAPI, payload);
     yield put(addCommentSuccess(result.data));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(addCommentFail(err));
   }
 }
@@ -120,7 +120,7 @@ function* removeComment({ payload }) {
     const result = yield call(removeCommentAPI, payload);
     yield put(removeCommentSuccess(result.data));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(removeCommentFail(err));
   }
 }
@@ -133,7 +133,7 @@ function* addLikers({ payload }) {
     const result = yield call(addLikersAPI, payload);
     yield put(addLikersSuccess(result.data));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(addLikersFail(err));
   }
 }
@@ -146,7 +146,7 @@ function* removeLikers({ payload }) {
     const result = yield call(removeLikersAPI, payload);
     yield put(removeLikersSuccess(result.data));
   } catch (err) {
-    console.log(err);
+    console.error(err);
     yield put(removeLikersFail(err));
   }
 }

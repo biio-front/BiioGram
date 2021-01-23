@@ -4,9 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, Input } from 'semantic-ui-react';
 import AuthCard from '../components/auth/AuthCard';
 import AuthLinkCard from '../components/auth/AuthLinkCard';
-import { loginRequest, enterGuest } from '../redux/user/userSlice';
+import { loginRequest } from '../redux/user/userSlice';
 import { useInput } from '../hooks/useInput';
 import styled from 'styled-components';
+import Router from 'next/router';
 
 const Auth = () => {
   const { loginLoading, loginError } = useSelector((state) => state.user);
@@ -16,9 +17,8 @@ const Auth = () => {
 
   const onSubmit = useCallback(() => {
     dispatch(loginRequest({ email, password }));
+    Router.push('/home');
   }, [email, password]);
-
-  const onGuest = useCallback(() => dispatch(enterGuest()), []);
 
   return (
     <>
@@ -52,9 +52,6 @@ const Auth = () => {
           <a>가입하기</a>
         </Link>
       </AuthLinkCard>
-      <s.p onClick={onGuest}>
-        <a>로그인 없이 이용하기</a>
-      </s.p>
     </>
   );
 };

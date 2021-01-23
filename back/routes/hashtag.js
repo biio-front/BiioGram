@@ -1,11 +1,19 @@
 const express = require('express');
 const router = express.Router();
+const { Op } = require('sequelize');
 const { Post, Comment, User, Image, Hashtag } = require('../models');
 
-router.get('/:tag', async (req, res, next) => { // GET /hashtag/[tag]
+router.get('/:tag', async (req, res, next) => { // GET /hashtag/[tag]?lastId
   try {
     const { tag } = req.params;
+    const { lastId } = req.query;
+    const where = {};
+    if (parseInt(lastId, 10)) {
+      where.id = { [Op.lt]: parseInt(lastId, 10) };
+    }
     const posts = await Post.findAll({
+      where,
+      limit: 5,
       order: [
         ['createdAt', 'DESC'],
         [Comment, 'createdAt', 'DESC'],

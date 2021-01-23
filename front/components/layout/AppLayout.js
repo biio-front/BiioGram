@@ -6,22 +6,17 @@ import 'semantic-ui-css/semantic.min.css';
 import styled from 'styled-components';
 import NavMenu from './NavMenu';
 import Avatar from '../common/Avatar';
-import { useDispatch, useSelector } from 'react-redux';
-import { logoutSuccess } from '../../redux/user/userSlice';
+import { useSelector } from 'react-redux';
+import { onNeedLogin } from '../common/onNeedLogin';
 
 const AppLayout = ({ children }) => {
-  const { avatar, id } = useSelector((state) => state.user.me);
+  const { me } = useSelector((state) => state.user);
   const [oepnMenu, setOpenMenu] = useState(false);
-  const dispatch = useDispatch();
 
   const onClick = useCallback(() => {
     setOpenMenu((prev) => !prev);
   }, []);
 
-  const onNeedLogin = useCallback(() => {
-    window.alert('로그인이 필요한 서비스입니다. 로그인화면으로 이동합니다.');
-    dispatch(logoutSuccess());
-  }, []);
   return (
     <>
       <s.header>
@@ -31,14 +26,18 @@ const AppLayout = ({ children }) => {
               <a>BiioGram</a>
             </Link>
           </Header>
-          <div className="menu" onClick={!id ? onNeedLogin : undefined}>
-            <Link href="/post/create">
+          <div className="menu">
+            <Link href={me?.id ? '/post/create' : '/auth'}>
               <a>
-                <Icon name="plus" size="large" />
+                <Icon
+                  name="plus"
+                  size="large"
+                  onClick={!me?.id ? onNeedLogin : undefined}
+                />
               </a>
             </Link>
             <span onClick={onClick}>
-              <Avatar src={avatar} size="45" />
+              <Avatar src={me?.avatar} size="45" />
             </span>
           </div>
         </nav>

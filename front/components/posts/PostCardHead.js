@@ -9,12 +9,12 @@ import PropTypes from 'prop-types';
 import Link from 'next/link';
 
 const PostCardHead = ({ userId, nickname, avatar, postId }) => {
-  const { id, Followings } = useSelector((state) => state.user.me);
+  const { me } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const [openMenu, setOpenMenu] = useState(false);
   const onFollow = useCallback(() => {
-    if (id) {
+    if (me?.id) {
       dispatch(addFollowRequest(userId));
     } else {
       window.alert('로그인이 필요한 서비스입니다.');
@@ -42,8 +42,8 @@ const PostCardHead = ({ userId, nickname, avatar, postId }) => {
           </Link>
           <span>
             <b>{nickname}</b>
-            {userId === id ||
-              (!Followings.find((v) => v.id === userId) && (
+            {userId === me?.id ||
+              (!me?.Followings.find((v) => v.id === userId) && (
                 <a onClick={onFollow}>· 팔로우하기</a>
               ))}
           </span>

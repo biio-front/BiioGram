@@ -29,7 +29,7 @@ const EditProfile = () => {
     const userId = me.id;
     dispatch(
       editProfileRequest({
-        src: imagePaths && imagePaths[0].src,
+        src: (imagePaths && imagePaths[0].src) || me?.avatar,
         nickname,
         desc,
         userId,

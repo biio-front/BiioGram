@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { END } from 'redux-saga';
 import { getMyInfoRequest } from '../redux/user/userSlice';
 import wrapper from '../store/configureStore';
-import Auth from '../components/auth/Auth';
+import Auth from '../components/auth';
 import { loadPostsRequest } from '../redux/post/postSlice';
 import Posts from '../components/posts';
 

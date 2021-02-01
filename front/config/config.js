@@ -1,2 +1,2 @@
-export const backURL = 'http://localhost:3055';
-export const frontURL = 'http://localhost:3050';
+export const backURL = 'http://api.biiogram.ga';
+export const frontURL = 'http://biiogram.ga';

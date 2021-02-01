@@ -1,6 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const hpp = require('hpp');
+const helmet = require('helmet');
+
 const path = require('path');  
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -23,7 +26,13 @@ db.sequelize.sync()
 .catch(console.error);
 
 // print the request log on console
-app.use(morgan('dev'));
+if (proccess.env.NODE_ENV === 'production') {
+  app.use(morgan('cominbed')); // 자세한로그 남기기(접속자ip까지)
+  app.use(hpp());
+  app.use(helmet());
+} else {
+  app.use(morgan('dev'));
+}
 
 // parse json and url-encoded query
 app.use(express.json());
@@ -31,7 +40,7 @@ app.use(express.urlencoded({extended: true}));
 
 // set the cors
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3050'],
+  origin: ['http://localhost:3000', 'http://localhost:3050', 'http://biiogram.ga'],
   credentials: true,
 }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -43,6 +52,7 @@ app.use(session({
   cookie: {
     httpOnly: true, 
     secure: false, 
+    domain: process.env.NODE_ENV === 'production' && '.biiogram.ga'
   }
 }));
 
@@ -63,6 +73,6 @@ app.use('/posts', postsRouter);
 app.use('/images', imagesRouter);
 app.use('/hashtag', hashtagRouter);
 
-app.listen(3055, () => {
+app.listen(80, () => {
   console.log('서버 실행중');
 });

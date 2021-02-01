@@ -9,17 +9,21 @@
   "main": "index.js",
   "scripts": {
     "dev": "next -p 3050",
-    "build": "next build",
-    "start": "next start"
+    "build": "cross-env ANALYZE=true NODE_ENV=production next build",
+    "prestart": "npm run build",
+    "start": "cross-env NODE_ENV=production next start -p 80"
   },
   "author": "biio",
   "license": "ISC",
   "dependencies": {
+    "@next/bundle-analyzer": "^10.0.6",
     "@reduxjs/toolkit": "^1.5.0",
     "axios": "^0.21.1",
+    "cross-env": "^7.0.3",
     "dayjs": "^1.10.4",
     "next": "^10.0.3",
     "next-redux-wrapper": "^6.0.2",
+    "pm2": "^4.5.4",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

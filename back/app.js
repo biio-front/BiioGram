@@ -26,7 +26,7 @@ db.sequelize.sync()
 .catch(console.error);
 
 // print the request log on console
-if (proccess.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production') {
   app.use(morgan('cominbed')); // 자세한로그 남기기(접속자ip까지)
   app.use(hpp());
   app.use(helmet());

@@ -1,13 +1,17 @@
 import Router from 'next/router';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Form, Input } from 'semantic-ui-react';
 import styled from 'styled-components';
 import AppLayout from '../../components/layout/AppLayout';
-import { editProfileRequest } from '../../redux/user/userSlice';
+import { editProfileRequest, getMyInfoRequest } from '../../redux/user/userSlice';
 import { useInput } from '../../hooks/useInput';
 import useUploadImages from '../../hooks/useUploadImages';
 import ProfileHead from '../../components/profile/profileHead';
+import { getImagePaths } from '../../redux/image/imageSlice';
+import wrapper from '../../store/configureStore';
+import axios from 'axios';
+import { END } from 'redux-saga';
 
 const EditProfile = () => {
   const { me, editProfileLoading } = useSelector((state) => state.user);
@@ -15,8 +19,11 @@ const EditProfile = () => {
   const dispatch = useDispatch();
 
   const [onFileChange, imageInput, onImageUpload] = useUploadImages();
-  const [nickname, onChangeNickname] = useInput(me.nickname);
-  const [desc, onChangeDesc] = useInput(me.desc || '');
+  const [nickname, onChangeNickname] = useInput(me?.nickname);
+  const [desc, onChangeDesc] = useInput(me?.desc || '');
+
+  useEffect(() => !me && Router.replace('/'));
+  useEffect(() => me?.avatar && dispatch(getImagePaths([{ src: me.avatar }])), []);
 
   const onSubmit = useCallback(() => {
     const userId = me.id;
@@ -35,7 +42,7 @@ const EditProfile = () => {
     <AppLayout>
       <s.article>
         <ProfileHead
-          avatar={imagePaths ? imagePaths[0]?.src : me.avatar}
+          avatar={imagePaths ? imagePaths[0]?.src : me?.avatar}
           nickname={nickname}
         >
           <input
@@ -46,7 +53,7 @@ const EditProfile = () => {
             onChange={onFileChange}
           />
           <div>
-            <p>{me.email}</p>
+            <p>{me?.email}</p>
             <s.changeAvatar onClick={onImageUpload}>프로필 사진 바꾸기</s.changeAvatar>
           </div>
         </ProfileHead>
@@ -107,4 +114,15 @@ s.Form = styled(Form)`
 s.Button = styled(Button)`
   width: 100%;
 `;
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  axios.defaults.headers.Cookie = '';
+  const cookie = context.req?.headers.cookie;
+  if (cookie) {
+    axios.defaults.headers.Cookie = cookie;
+    context.store.dispatch(getMyInfoRequest());
+  }
+  context.store.dispatch(END);
+  await context.store.sagaTask.toPromise();
+});
 export default EditProfile;

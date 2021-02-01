@@ -7,6 +7,7 @@ import DropDownMenu from '../common/DropDownMenu';
 import { preupdatePost, removePostRequest } from '../../redux/post/postSlice';
 import { addFollowRequest, removeFollowRequest } from '../../redux/user/userSlice';
 import Link from 'next/link';
+import { onNeedLogin } from '../common/onNeedLogin';
 
 const PostMenu = ({ userId, postId }) => {
   const {
@@ -52,11 +53,7 @@ const PostMenu = ({ userId, postId }) => {
         </>
       ) : (
         <>
-          <List.Item
-            onClick={() =>
-              id ? onToggleFollow() : window.alert('로그인이 필요한 서비스입니다.')
-            }
-          >
+          <List.Item onClick={() => (id ? onToggleFollow() : onNeedLogin())}>
             {addFollowLoading || removeFollowLoading ? (
               <Loader active inline="centered" />
             ) : follow ? (

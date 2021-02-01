@@ -5,7 +5,7 @@ const { Post, Comment, User, Image } = require('../models');
 
 router.get('/', async (req, res, next) => {
   try {
-  const { lastId } = req.query;
+    const { lastId } = req.query;
     const where = {};
     // lastId가 존재하는 경우(스크롤 후). 초기로딩일경우 where없음.
     if (parseInt(lastId, 10)) { 

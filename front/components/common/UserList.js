@@ -6,16 +6,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addFollowRequest, removeFollowRequest } from '../../redux/user/userSlice';
 import Avatar from './Avatar';
 import Link from 'next/link';
+import { onNeedLogin } from './onNeedLogin';
 
 const UserList = ({ nickname, userId, avatar }) => {
-  const {
-    me: { Followings, id },
-  } = useSelector((state) => state.user);
+  const { me } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const [oepnConfirm, setOpenConfirm] = useState(false);
   const onConfirm = useCallback(() => setOpenConfirm(true), []);
-  const onFollow = useCallback(() => dispatch(addFollowRequest(userId)), []);
+  const onFollow = useCallback(
+    () => (me ? dispatch(addFollowRequest(userId)) : onNeedLogin()),
+    [],
+  );
   const onUnfollow = useCallback(() => dispatch(removeFollowRequest(userId)), []);
   const style = useMemo(() => ({ padding: '4px 8px' }));
   return (
@@ -32,8 +34,8 @@ const UserList = ({ nickname, userId, avatar }) => {
           <s.ListHeader>
             <s.span>{nickname}</s.span>
           </s.ListHeader>
-          {userId !== id ? (
-            Followings.find((v) => v.id === userId) ? (
+          {userId !== me?.id ? (
+            me?.Followings.find((v) => v.id === userId) ? (
               <Button
                 color="teal"
                 floated="right"

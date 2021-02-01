@@ -6,8 +6,11 @@ import { Button, Form, Input } from 'semantic-ui-react';
 import styled from 'styled-components';
 import AuthCard from '../components/auth/AuthCard';
 import AuthLinkCard from '../components/auth/AuthLinkCard';
-import { resetSignUp, signUpRequest } from '../redux/user/userSlice';
+import { getMyInfoRequest, resetSignUp, signUpRequest } from '../redux/user/userSlice';
 import { useInput } from '../hooks/useInput';
+import wrapper from '../store/configureStore';
+import axios from 'axios';
+import { END } from 'redux-saga';
 
 const SignUp = () => {
   const { me, signUpLoading, signUpError, signUpDone } = useSelector(
@@ -118,4 +121,15 @@ s.agree = styled.div`
 s.Button = styled(Button)`
   width: 100%;
 `;
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  axios.defaults.headers.Cookie = '';
+  const cookie = context.req?.headers.cookie;
+  if (cookie) {
+    axios.defaults.headers.Cookie = cookie;
+    context.store.dispatch(getMyInfoRequest());
+  }
+  context.store.dispatch(END);
+  await context.store.sagaTask.toPromise();
+});
 export default SignUp;

@@ -10,9 +10,6 @@ export const initialState = {
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
-  updatePostLoading: false,
-  updatePostDone: false,
-  updatePostError: null,
   removePostLoading: false,
   removePostDone: false,
   removePostError: null,
@@ -89,23 +86,22 @@ const slice = createSlice({
       state.singlePost = findPost;
     },
     updatePostRequest(state) {
-      state.updatePostLoading = true;
-      state.updatePostDone = false;
-      state.updatePostError = null;
+      state.addPostLoading = true;
+      state.addPostDone = false;
+      state.addPostError = null;
     },
     updatePostSuccess(state, { payload: { images, content } }) {
-      console.log(images);
       const updatePost = state.mainPosts.find((v) => v.id === state.singlePost.id);
-      state.updatePostLoading = false;
-      state.updatePostDone = true;
+      state.addPostLoading = false;
+      state.addPostDone = true;
       updatePost.Images = images;
       updatePost.content = content;
       state.singlePost = null;
     },
     updatePostFail(state, { payload: error }) {
       console.log(error);
-      state.updatePostLoading = false;
-      state.updatePostError = error;
+      state.addPostLoading = false;
+      state.addPostError = error;
     },
     removePostRequest(state) {
       state.removePostLoading = true;
@@ -131,7 +127,7 @@ const slice = createSlice({
       state.addCommentLoading = false;
       state.addCommentDone = true;
       const post = state.mainPosts.find((v) => v.id === payload.PostId);
-      post.Comments.push(payload);
+      post.Comments.unshift(payload);
     },
     addCommentFail(state, { payload: error }) {
       console.log(error);

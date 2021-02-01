@@ -20,38 +20,13 @@ import {
   removeFollowRequest,
   removeFollowSuccess,
   removeFollowFail,
-  loadMyInfoRequest,
-  loadMyInfoSuccess,
-  loadMyInfoFail,
-  getAccessToken,
+  getUserInfoRequest,
+  getUserInfoSuccess,
+  getUserInfoFail,
+  getMyInfoRequest,
+  getMyInfoSuccess,
+  getMyInfoFail,
 } from './userSlice';
-
-function getAccessTokenAPI() {
-  return axios.post('/auth/refresh-token');
-}
-function* getAccessTokenSaga() {
-  try {
-    const result = yield call(getAccessTokenAPI);
-    console.log(result.data.token);
-    // yield put(loadMyInfoSuccess(result.data));
-  } catch (err) {
-    console.error(err);
-    // yield put(loadMyInfoFail(err));
-  }
-}
-
-function loadMyInfoAPI() {
-  return axios.get('/user');
-}
-function* loadMyInfo() {
-  try {
-    const result = yield call(loadMyInfoAPI);
-    yield put(loadMyInfoSuccess(result.data));
-  } catch (err) {
-    console.error(err);
-    yield put(loadMyInfoFail(err));
-  }
-}
 
 function loginAPI(data) {
   return axios.post('/auth/login', data);
@@ -59,9 +34,7 @@ function loginAPI(data) {
 function* login({ payload }) {
   try {
     const result = yield call(loginAPI, payload);
-    const { token: accessToken } = result.data;
-    axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
-    yield put(loginSuccess(result.data.me));
+    yield put(loginSuccess(result.data));
   } catch (err) {
     console.error(err);
     yield put(loginFail(err));
@@ -136,12 +109,32 @@ function* removeFollow({ payload }) {
   }
 }
 
-export function* watchGetAccessToken() {
-  yield takeLatest(getAccessToken, getAccessTokenSaga);
+function getUserInfoAPI(data) {
+  return axios.get(`/user/${data}`); // GET /user/userId
 }
-export function* watchLoadMyInfo() {
-  yield takeLatest(loadMyInfoRequest, loadMyInfo);
+function* getUserInfo({ payload }) {
+  try {
+    const result = yield call(getUserInfoAPI, payload);
+    yield put(getUserInfoSuccess(result.data));
+  } catch (err) {
+    console.error(err);
+    yield put(getUserInfoFail(err));
+  }
 }
+
+function getMyInfoAPI() {
+  return axios.get(`/user`); // GET /user
+}
+function* getMyInfo({ payload }) {
+  try {
+    const result = yield call(getMyInfoAPI, payload);
+    yield put(getMyInfoSuccess(result.data));
+  } catch (err) {
+    console.error(err);
+    yield put(getMyInfoFail(err));
+  }
+}
+
 export function* watchLogin() {
   yield takeLatest(loginRequest, login);
 }
@@ -160,16 +153,22 @@ export function* watchAddFollow() {
 export function* watchRemoveFollow() {
   yield takeLatest(removeFollowRequest, removeFollow);
 }
+export function* watchGetUserInfo() {
+  yield takeLatest(getUserInfoRequest, getUserInfo);
+}
+export function* watchGetMyInfo() {
+  yield takeLatest(getMyInfoRequest, getMyInfo);
+}
 
 export default function* userSaga() {
   yield all([
-    fork(watchGetAccessToken),
-    fork(watchLoadMyInfo),
     fork(watchLogin),
     fork(watchLogout),
     fork(watchSignUp),
     fork(watchEditProfile),
     fork(watchAddFollow),
     fork(watchRemoveFollow),
+    fork(watchGetUserInfo),
+    fork(watchGetMyInfo),
   ]);
 }

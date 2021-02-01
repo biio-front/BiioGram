@@ -15,7 +15,7 @@ const AuthCard = ({ children }) => {
       <Divider horizontal>
         <s.smallText>OR</s.smallText>
       </Divider>
-      <p>SNS 로그인</p>
+      <s.SNSLogin>SNS로그인</s.SNSLogin>
     </Card>
   );
 };
@@ -26,6 +26,18 @@ s.logo = styled.h1`
 `;
 s.smallText = styled.span`
   font-size: 0.75rem;
+`;
+s.SNSLogin = styled.div`
+  padding-top: 10px;
+  & button {
+    padding: 8px;
+    border: none;
+    border-radius: 3px;
+    width: 48%;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
 `;
 AuthCard.propTypes = {
   children: PropTypes.node.isRequired,

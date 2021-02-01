@@ -7,6 +7,7 @@ import Avatar from '../common/Avatar';
 import PostMenu from './PostMenu';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
+import { onNeedLogin } from '../common/onNeedLogin';
 
 const PostCardHead = ({ userId, nickname, avatar, postId }) => {
   const { me } = useSelector((state) => state.user);
@@ -17,7 +18,7 @@ const PostCardHead = ({ userId, nickname, avatar, postId }) => {
     if (me?.id) {
       dispatch(addFollowRequest(userId));
     } else {
-      window.alert('로그인이 필요한 서비스입니다.');
+      onNeedLogin();
     }
   }, []);
   const onToggleMenu = useCallback(() => {

@@ -9,8 +9,16 @@ import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { addLikersRequest, removeLikersRequest } from '../../redux/post/postSlice';
 import PostCardHead from './PostCardHead';
+import { onNeedLogin } from '../common/onNeedLogin';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
+import { sc } from './CommentContent';
 
-const PostCard = ({ user, content, Images, comments, postId, Likers }) => {
+dayjs.extend(relativeTime);
+dayjs.locale('ko');
+
+const PostCard = ({ user, content, Images, comments, postId, Likers, createdAt }) => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
 
@@ -41,9 +49,7 @@ const PostCard = ({ user, content, Images, comments, postId, Likers }) => {
           name={hearted ? 'heart' : 'heart outline'}
           size="large"
           color={hearted ? 'red' : 'black'}
-          onClick={() =>
-            me?.id ? onToggleHeart() : window.alert('로그인이 필요한 서비스입니다.')
-          }
+          onClick={() => (me?.id ? onToggleHeart() : onNeedLogin())}
         />
         <Icon
           name="comment outline"
@@ -57,6 +63,7 @@ const PostCard = ({ user, content, Images, comments, postId, Likers }) => {
 
       {/* 포스트 내용 */}
       <PostCardContent nickname={user.nickname} content={content} />
+      <sc.date>{dayjs().to(dayjs(createdAt))}</sc.date>
 
       {/* 덧글 */}
       <Comment
@@ -97,13 +104,14 @@ PostCard.propTypes = {
     avatar: PropTypes.string,
   }).isRequired,
   postId: PropTypes.number.isRequired,
+  createdAt: PropTypes.string,
+  content: PropTypes.string.isRequired,
   Images: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       src: PropTypes.string.isRequired,
     }),
   ).isRequired,
-  content: PropTypes.string.isRequired,
   Likers: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,

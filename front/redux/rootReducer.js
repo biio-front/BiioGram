@@ -7,7 +7,6 @@ import image from '../redux/image/imageSlice';
 const rootReducer = (state, action) => {
   switch (action.type) {
     case HYDRATE:
-      console.log('HYDRATE', action);
       return action.payload;
     default: {
       const combinedReducer = combineReducers({ user, post, image });

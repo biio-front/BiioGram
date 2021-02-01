@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Form, Input, List } from 'semantic-ui-react';
-import CommentList from './CommentList';
+import CommentContent from './CommentContent';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { addCommentRequest } from '../../redux/post/postSlice';
 import { useInput } from '../../hooks/useInput';
 import PropTypes from 'prop-types';
+import { onNeedLogin } from '../common/onNeedLogin';
 
 const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
   const { me } = useSelector((state) => state.user);
@@ -33,7 +34,7 @@ const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
       dispatch(addCommentRequest({ postId, content: text }));
       setNewComment(text);
     } else {
-      window.alert('로그인이 필요한 서비스입니다.');
+      onNeedLogin();
     }
     setText('');
   }, [text]);
@@ -45,7 +46,7 @@ const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
       {open && (
         <List>
           {comments.map((v) => (
-            <CommentList
+            <CommentContent
               key={v.id}
               postId={postId}
               commentId={v.id}
@@ -53,16 +54,15 @@ const Comment = ({ postId, comments, toggleComment, onToggleComment }) => {
               nickname={v.User.nickname}
               avatar={v.User.avatar}
               content={v.content}
+              createdAt={v.createdAt}
             />
           ))}
         </List>
       )}
       {newComment && !open && (
         <List>
-          <CommentList
+          <CommentContent
             postId={postId}
-            commentId={comments.length + 1}
-            userId={me.id}
             nickname={me.nickname}
             avatar={me.avatar}
             content={newComment}

@@ -1,17 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import wrapper from '../store/configureStore';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import '../style/global.css';
-import { getAccessToken } from '../redux/user/userSlice';
-import { useDispatch } from 'react-redux';
 
 const BiioGram = ({ Component }) => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(getAccessToken()); // 로그인 정보 가져오기
-    return;
-  }, []);
   return (
     <>
       <Head>

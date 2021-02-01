@@ -23,7 +23,7 @@ const PostCardContent = ({ nickname, content }) => {
 
 const s = {};
 s.content = styled.div`
-  margin: 0 10px 10px;
+  margin: 0 10px;
   & span {
     font-weight: bold;
     margin-right: 10px;

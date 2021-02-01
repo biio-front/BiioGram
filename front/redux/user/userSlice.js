@@ -1,9 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-
 export const initialState = {
-  loadMyInfoLoading: false,
-  loadMyInfoDone: false,
-  loadMyInfoError: null,
+  me: null,
+  user: null,
   loginLoading: false,
   loginDone: false,
   loginError: null,
@@ -22,53 +20,20 @@ export const initialState = {
   removeFollowLoading: false,
   removeFollowDone: false,
   removeFollowError: null,
-  me: null,
+  getuserInfoLoading: false,
+  getuserInfoDone: false,
+  getuserInfoError: null,
 };
 const slice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    getAccessToken() {
-      console.log(';');
-      // state.loadMyInfoLoading = true;
-      // state.loadMyInfoDone = false;
-      // state.loadMyInfoError = null;
-    },
-    loadMyInfoRequest(state) {
-      state.loadMyInfoLoading = true;
-      state.loadMyInfoDone = false;
-      state.loadMyInfoError = null;
-    },
-    loadMyInfoSuccess(
-      state,
-      { payload: { id, email, nickname, avatar, desc, Followers, Followings } },
-    ) {
-      state.loadMyInfoLoading = false;
-      state.loadMyInfoDone = true;
-      state.me = {
-        id,
-        email,
-        nickname,
-        avatar,
-        desc,
-        Followings,
-        Followers,
-      };
-    },
-    loadMyInfoFail(state, { payload: error }) {
-      console.log(error);
-      state.loadMyInfoLoading = false;
-      state.loadMyInfoError = error;
-    },
     loginRequest(state) {
       state.loginLoading = true;
       state.loginDone = false;
       state.loginError = null;
     },
-    loginSuccess(
-      state,
-      { payload: { id, email, nickname, avatar, desc, Followers, Followings } },
-    ) {
+    loginSuccess(state, { payload: { id, email, nickname, avatar, desc, Followings } }) {
       state.loginLoading = false;
       state.loginDone = true;
       state.me = {
@@ -78,7 +43,6 @@ const slice = createSlice({
         avatar,
         desc,
         Followings,
-        Followers,
       };
     },
     loginFail(state, { payload: error }) {
@@ -160,6 +124,36 @@ const slice = createSlice({
       state.removeFollowLoading = false;
       state.removeFollowError = error;
     },
+    getUserInfoRequest(state) {
+      state.getUserInfoLoading = true;
+      state.getUserInfoDone = false;
+      state.getUserInfoError = null;
+    },
+    getUserInfoSuccess(state, { payload }) {
+      state.getUserInfoLoading = false;
+      state.getUserInfoDone = true;
+      state.user = payload;
+    },
+    getUserInfoFail(state, { payload: error }) {
+      console.log(error);
+      state.getUserInfoLoading = false;
+      state.getUserInfoError = error;
+    },
+    getMyInfoRequest(state) {
+      state.getUserInfoLoading = true;
+      state.getUserInfoDone = false;
+      state.getUserInfoError = null;
+    },
+    getMyInfoSuccess(state, { payload }) {
+      state.getUserInfoLoading = false;
+      state.getUserInfoDone = true;
+      state.me = payload;
+    },
+    getMyInfoFail(state, { payload: error }) {
+      console.log(error);
+      state.getUserInfoLoading = false;
+      state.getUserInfoError = error;
+    },
     resetSignUp(state) {
       state.signUpDone = false;
     },
@@ -168,10 +162,6 @@ const slice = createSlice({
 
 export default slice.reducer;
 export const {
-  getAccessToken,
-  loadMyInfoRequest,
-  loadMyInfoSuccess,
-  loadMyInfoFail,
   loginRequest,
   loginSuccess,
   loginFail,
@@ -190,5 +180,11 @@ export const {
   removeFollowRequest,
   removeFollowSuccess,
   removeFollowFail,
+  getUserInfoRequest,
+  getUserInfoSuccess,
+  getUserInfoFail,
+  getMyInfoRequest,
+  getMyInfoSuccess,
+  getMyInfoFail,
   resetSignUp,
 } = slice.actions;

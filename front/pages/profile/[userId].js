@@ -2,67 +2,50 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Grid, List } from 'semantic-ui-react';
 import styled from 'styled-components';
-import useSWR from 'swr';
 import AppLayout from '../../components/layout/AppLayout';
 import PostImg from '../../components/profile/PostImg';
 import ListModal from '../../components/common/ListModal';
 import ProfileHead from '../../components/profile/profileHead';
-import fetcher from '../../util/SWR_fetcher';
 import { useRouter } from 'next/router';
+import { END } from 'redux-saga';
+import { getMyInfoRequest, getUserInfoRequest } from '../../redux/user/userSlice';
+import axios from 'axios';
+import wrapper from '../../store/configureStore';
 
 const Profile = () => {
   const router = useRouter();
   const { userId } = router.query;
-  const { me } = useSelector((state) => state.user);
+  const { me, user } = useSelector((state) => state.user);
 
-  const { data: userInfo, error: userInfoError } = useSWR(
-    `http://localhost:3055/user/${userId}/`,
-    fetcher,
-  );
-  const { data: userPosts, error: userPostsError } = useSWR(
-    `http://localhost:3055/user/${userId}/posts`,
-    fetcher,
-  );
-  const { data: followersData, error: followerError } = useSWR(
-    `http://localhost:3055/user/${userId}/followers`,
-    fetcher,
-  );
-  const { data: followingsData, error: followingsError } = useSWR(
-    `http://localhost:3055/user/${userId}/followings`,
-    fetcher,
-  );
-
-  if (userInfoError || userPostsError || followerError || followingsError)
-    return <div>다시 시도해주세요.</div>;
   return (
     <>
       <AppLayout>
         <s.profile>
           <ProfileHead
-            avatar={userInfo?.avatar}
-            nickname={userInfo?.nickname}
+            avatar={user?.avatar}
+            nickname={user?.nickname}
             edit={parseInt(userId, 10) === me?.id ? '수정하기' : null}
           >
             {/* 프로필 상단 오른쪽 */}
             <s.List horizontal>
               <List.Item>
-                게시글 <span>{userPosts?.length || 0}</span>
+                게시글 <span>{user?.Posts.length || 0}</span>
               </List.Item>
               <List.Item>
-                <ListModal list={followersData || []} title="팔로워" />
+                <ListModal list={user?.Followers || []} title="팔로워" />
               </List.Item>
               <List.Item>
-                <ListModal list={followingsData || []} title="팔로우" />
+                <ListModal list={user?.Followings || []} title="팔로우" />
               </List.Item>
             </s.List>
-            <p>{userInfo?.desc}</p>
+            <p>{user?.desc}</p>
           </ProfileHead>
 
           {/* 내가 쓴 게시글 보기 */}
           <s.article>
             <Grid columns={3}>
               <Grid.Row>
-                {userPosts?.map((v, i) => (
+                {user?.Posts.map((v, i) => (
                   <Grid.Column key={i}>
                     <PostImg
                       src={v.Images[0].src}
@@ -100,4 +83,18 @@ s.article = styled.article`
   min-height: calc(100vh - 74px - 190px - 65px);
   margin-top: 20px;
 `;
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  const { userId } = context.params;
+  context.store.dispatch(getUserInfoRequest(userId));
+  const cookie = context.req?.headers.cookie;
+  console.log(cookie);
+  if (cookie) {
+    axios.defaults.headers.Cookie = cookie;
+    context.store.dispatch(getMyInfoRequest());
+    axios.defaults.headers.Cookie = '';
+  }
+  context.store.dispatch(END);
+  await context.store.sagaTask.toPromise();
+});
 export default Profile;

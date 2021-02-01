@@ -16,11 +16,14 @@ import Router from 'next/router';
 
 const PostForm = ({ post }) => {
   const { addPostLoading, addPostDone } = useSelector((state) => state.post);
+  const { me } = useSelector((state) => state.user);
   const { imagePaths } = useSelector((state) => state.image);
   const dispatch = useDispatch();
 
   const [onFileChange, imageInput, onImageUpload] = useUploadImages();
   const [text, onChangeText, setText] = useInput(post?.content);
+
+  useEffect(() => !me && Router.replace('/'));
 
   useEffect(() => {
     if (addPostDone) {
@@ -51,6 +54,7 @@ const PostForm = ({ post }) => {
               hidden
               ref={imageInput}
               onChange={onFileChange}
+              key={imagePaths}
             />
             <s.imageUpload>
               {imagePaths ? (

@@ -20,7 +20,6 @@ const slice = createSlice({
       state.uploadImagesLoading = false;
       state.uploadImagesDone = true;
       state.imagePaths = payload.map((v) => ({ src: `http://localhost:3055/${v}` }));
-      console.log(payload);
     },
     uploadImagesFail(state, { payload: error }) {
       console.log(error);

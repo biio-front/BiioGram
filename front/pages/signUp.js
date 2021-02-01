@@ -101,7 +101,7 @@ const SignUp = () => {
         </Form>
       </AuthCard>
       <AuthLinkCard question="계정이 있으신가요?">
-        <Link href="/auth">로그인하기</Link>
+        <Link href="/">로그인하기</Link>
       </AuthLinkCard>
     </>
   );

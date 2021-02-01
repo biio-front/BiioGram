@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Card, Divider } from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -12,10 +12,6 @@ const AuthCard = ({ children }) => {
     <Card style={cardStyle} centered>
       <s.logo>BiioGram</s.logo>
       {children}
-      <Divider horizontal>
-        <s.smallText>OR</s.smallText>
-      </Divider>
-      <s.SNSLogin>SNS로그인</s.SNSLogin>
     </Card>
   );
 };

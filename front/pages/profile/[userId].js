@@ -12,6 +12,7 @@ import { getMyInfoRequest, getUserInfoRequest } from '../../redux/user/userSlice
 import axios from 'axios';
 import wrapper from '../../store/configureStore';
 import Head from 'next/head';
+import { frontURL } from '../../config/config';
 
 const Profile = () => {
   const router = useRouter();
@@ -25,11 +26,8 @@ const Profile = () => {
         <meta name="description" content={user?.desc} />
         <meta property="og:title" content={user?.nickname} />
         <meta property="og:description" content={user?.desc} />
-        <meta
-          property="og:image"
-          content={user?.avatar || 'https://localhost:3050/favicon.png'}
-        />
-        <meta property="og:url" content={`https://localhost:3050/profile/${userId}`} />
+        <meta property="og:image" content={user?.avatar || `${frontURL}/favicon.png`} />
+        <meta property="og:url" content={`${frontURL}/profile/${userId}`} />
       </Head>
       <AppLayout>
         <s.profile>

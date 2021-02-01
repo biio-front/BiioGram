@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+// session 사용x 프론트로 리프레시토큰 발급.
 export const initialState = {
   me: null,
   user: null,
@@ -33,17 +34,10 @@ const slice = createSlice({
       state.loginDone = false;
       state.loginError = null;
     },
-    loginSuccess(state, { payload: { id, email, nickname, avatar, desc, Followings } }) {
+    loginSuccess(state, { payload }) {
       state.loginLoading = false;
       state.loginDone = true;
-      state.me = {
-        id,
-        email,
-        nickname,
-        avatar,
-        desc,
-        Followings,
-      };
+      state.me = payload;
     },
     loginFail(state, { payload: error }) {
       console.log(error);

@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { END } from 'redux-saga';
 import Posts from '../../components/posts';
+import { frontURL } from '../../config/config';
 import { loadHashtagPostsRequest } from '../../redux/post/postSlice';
 import { getMyInfoRequest } from '../../redux/user/userSlice';
 import wrapper from '../../store/configureStore';
@@ -18,8 +19,8 @@ const hashtag = () => {
         <meta name="description" content={tag} />
         <meta property="og:title" content={tag} />
         <meta property="og:description" content={tag} />
-        <meta property="og:image" content="https://localhost:3050/favicon.png" />
-        <meta property="og:url" content={`https://localhost:3050/hashtag/${tag}`} />
+        <meta property="og:image" content={`${frontURL}/favicon.png`} />
+        <meta property="og:url" content={`${frontURL}/hashtag/${tag}`} />
       </Head>
       <Posts whatPosts={loadHashtagPostsRequest} query={tag} />
     </>

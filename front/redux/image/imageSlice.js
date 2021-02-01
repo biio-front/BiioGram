@@ -1,4 +1,5 @@
 const { createSlice } = require('@reduxjs/toolkit');
+const { backURL } = require('../../config/config');
 
 const initialState = {
   uploadImagesLoading: false,
@@ -19,7 +20,7 @@ const slice = createSlice({
     uploadImagesSuccess(state, { payload }) {
       state.uploadImagesLoading = false;
       state.uploadImagesDone = true;
-      state.imagePaths = payload.map((v) => ({ src: `http://localhost:3055/${v}` }));
+      state.imagePaths = payload.map((v) => ({ src: `${backURL}/${v}` }));
     },
     uploadImagesFail(state, { payload: error }) {
       console.log(error);

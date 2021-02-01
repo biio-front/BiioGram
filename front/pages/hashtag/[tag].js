@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { END } from 'redux-saga';
@@ -10,7 +11,19 @@ import wrapper from '../../store/configureStore';
 const hashtag = () => {
   const router = useRouter();
   const { tag } = router.query;
-  return <Posts whatPosts={loadHashtagPostsRequest} query={tag} />;
+  return (
+    <>
+      <Head>
+        <title>BiioGram | {tag}</title>
+        <meta name="description" content={tag} />
+        <meta property="og:title" content={tag} />
+        <meta property="og:description" content={tag} />
+        <meta property="og:image" content="https://localhost:3050/favicon.png" />
+        <meta property="og:url" content={`https://localhost:3050/hashtag/${tag}`} />
+      </Head>
+      <Posts whatPosts={loadHashtagPostsRequest} query={tag} />
+    </>
+  );
 };
 
 export const getServerSideProps = wrapper.getServerSideProps(async (context) => {

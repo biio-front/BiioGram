@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { END } from 'redux-saga';
 import { getMyInfoRequest } from '../redux/user/userSlice';
 import wrapper from '../store/configureStore';
-import Auth from '../components/auth/auth';
+import Auth from '../components/auth/Auth';
 import { loadPostsRequest } from '../redux/post/postSlice';
 import Posts from '../components/posts';
 
@@ -19,7 +19,6 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   if (context.req && cookie) {
     axios.defaults.headers.Cookie = cookie;
     context.store.dispatch(getMyInfoRequest());
-    console.log('내정보 요청 프론트');
     axios.defaults.headers.Cookie = '';
   }
   context.store.dispatch(END);

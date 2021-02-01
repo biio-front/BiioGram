@@ -11,6 +11,7 @@ import { END } from 'redux-saga';
 import { getMyInfoRequest, getUserInfoRequest } from '../../redux/user/userSlice';
 import axios from 'axios';
 import wrapper from '../../store/configureStore';
+import Head from 'next/head';
 
 const Profile = () => {
   const router = useRouter();
@@ -19,6 +20,17 @@ const Profile = () => {
 
   return (
     <>
+      <Head>
+        <title>BiioGram | {user?.nickname}</title>
+        <meta name="description" content={user?.desc} />
+        <meta property="og:title" content={user?.nickname} />
+        <meta property="og:description" content={user?.desc} />
+        <meta
+          property="og:image"
+          content={user?.avatar || 'https://localhost:3050/favicon.png'}
+        />
+        <meta property="og:url" content={`https://localhost:3050/profile/${userId}`} />
+      </Head>
       <AppLayout>
         <s.profile>
           <ProfileHead

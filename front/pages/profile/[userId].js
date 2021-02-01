@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import AppLayout from '../../components/layout/AppLayout';
 import PostImg from '../../components/profile/PostImg';
 import ListModal from '../../components/common/ListModal';
-import ProfileHead from '../../components/profile/profileHead';
+import ProfileHead from '../../components/profile/ProfileHead';
 import { useRouter } from 'next/router';
 import { END } from 'redux-saga';
 import { getMyInfoRequest, getUserInfoRequest } from '../../redux/user/userSlice';

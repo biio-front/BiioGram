@@ -7,7 +7,7 @@ import AppLayout from '../../components/layout/AppLayout';
 import { editProfileRequest, getMyInfoRequest } from '../../redux/user/userSlice';
 import { useInput } from '../../hooks/useInput';
 import useUploadImages from '../../hooks/useUploadImages';
-import ProfileHead from '../../components/profile/profileHead';
+import ProfileHead from '../../components/profile/ProfileHead';
 import { getImagePaths } from '../../redux/image/imageSlice';
 import wrapper from '../../store/configureStore';
 import axios from 'axios';

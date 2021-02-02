@@ -1,6 +1,7 @@
 # [BiioGram](http://biiogram.ga)
-http://biiogram.ga
-<img src="https://postfiles.pstatic.net/MjAyMTAyMDJfMTg2/MDAxNjEyMjQ1MjExMDU3.lLuizlkBpzW4XBhffp1kib4I44xP6Z8e0Nei7p0l6R4g.nIWEujcdSEftqvRXgmATt7d8i_zuWNgq_QqXOP1OVyQg.GIF.bohwajung/biiogram.gif?type=w966">
+http://biiogram.ga  
+  
+<img src="https://postfiles.pstatic.net/MjAyMTAyMDJfMTcy/MDAxNjEyMjQ2OTM3MzAy.Hwb4lzjIbFDUZEKmur5bJHC55asg4OpOeE7U16HAhxkg.81ypipjv3d_nLbi2qDPP-F09aN-tkRXcNhiDcKstnEwg.GIF.bohwajung/biiogram.gif?type=w966">
 Next, express, MYSql 를 사용하여 만든 인스타그램 클론 코딩입니다.  
 AWS를 사용하여 배포했으며, 이미지업로드는 S3를 사용합니다.
 

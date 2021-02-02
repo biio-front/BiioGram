@@ -51,7 +51,7 @@ const Auth = () => {
         {loginError && '이메일이나 비밀번호를 확인해주세요.'}
       </AuthCard>
       <AuthLinkCard question="계정이 없으신가요?">
-        <Link href="/signup">
+        <Link href="/signUp">
           <a>가입하기</a>
         </Link>
       </AuthLinkCard>

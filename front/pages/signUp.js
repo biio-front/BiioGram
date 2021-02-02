@@ -12,7 +12,7 @@ import wrapper from '../store/configureStore';
 import axios from 'axios';
 import { END } from 'redux-saga';
 
-const Signup = () => {
+const SignUp = () => {
   const { me, signUpLoading, signUpError, signUpDone } = useSelector(
     (state) => state.user,
   );
@@ -132,4 +132,4 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   context.store.dispatch(END);
   await context.store.sagaTask.toPromise();
 });
-export default Signup;
+export default SignUp;

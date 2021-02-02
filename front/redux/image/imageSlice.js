@@ -1,5 +1,4 @@
 const { createSlice } = require('@reduxjs/toolkit');
-const { backURL } = require('../../config/config');
 
 const initialState = {
   uploadImagesLoading: false,
@@ -12,7 +11,12 @@ const slice = createSlice({
   name: 'image',
   initialState,
   reducers: {
-    uploadImagesRequest(state) {
+    uploadPostImagesRequest(state) {
+      state.uploadImagesLoading = true;
+      state.uploadImagesDone = false;
+      state.uploadImagesError = null;
+    },
+    uploadAvatarImageRequest(state) {
       state.uploadImagesLoading = true;
       state.uploadImagesDone = false;
       state.uploadImagesError = null;
@@ -20,7 +24,7 @@ const slice = createSlice({
     uploadImagesSuccess(state, { payload }) {
       state.uploadImagesLoading = false;
       state.uploadImagesDone = true;
-      state.imagePaths = payload.map((v) => ({ src: `${backURL}/${v}` }));
+      state.imagePaths = payload.map((v) => ({ src: v }));
     },
     uploadImagesFail(state, { payload: error }) {
       console.log(error);
@@ -38,7 +42,8 @@ const slice = createSlice({
 
 export default slice.reducer;
 export const {
-  uploadImagesRequest,
+  uploadPostImagesRequest,
+  uploadAvatarImageRequest,
   uploadImagesSuccess,
   uploadImagesFail,
   getImagePaths,

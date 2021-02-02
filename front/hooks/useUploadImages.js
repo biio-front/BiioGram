@@ -1,8 +1,11 @@
 import { useCallback, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { uploadImagesRequest } from '../redux/image/imageSlice';
+import {
+  uploadAvatarImageRequest,
+  uploadPostImagesRequest,
+} from '../redux/image/imageSlice';
 
-const useUploadImages = () => {
+const useUploadImages = (what) => {
   const dispatch = useDispatch();
   const onFileChange = useCallback((e) => {
     const { files } = e.target;
@@ -10,7 +13,11 @@ const useUploadImages = () => {
     [].forEach.call(files, (file) => {
       imageFormData.append('image', file);
     });
-    dispatch(uploadImagesRequest(imageFormData));
+    if (what === 'post') {
+      dispatch(uploadPostImagesRequest(imageFormData));
+    } else if (what === 'avatar') {
+      dispatch(uploadAvatarImageRequest(imageFormData));
+    }
   }, []);
 
   const imageInput = useRef();

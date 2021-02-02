@@ -20,7 +20,7 @@ const PostForm = ({ post }) => {
   const { imagePaths } = useSelector((state) => state.image);
   const dispatch = useDispatch();
 
-  const [onFileChange, imageInput, onImageUpload] = useUploadImages();
+  const [onFileChange, imageInput, onImageUpload] = useUploadImages('post');
   const [text, onChangeText, setText] = useInput(post?.content);
 
   useEffect(() => !me && Router.replace('/'));
@@ -78,7 +78,7 @@ const PostForm = ({ post }) => {
               onChange={onChangeText}
             />
             <s.Button
-              color="teal"
+              color="pink"
               type="submit"
               content="작성하기"
               loading={addPostLoading}

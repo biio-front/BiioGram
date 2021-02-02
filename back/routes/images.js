@@ -2,34 +2,50 @@ const express = require('express');
 const router = express.Router();
 
 const multer = require('multer');
-const { diskStorage } = require('multer');
-const fs = require('fs');  // 파일 시스템을 조작할수있는 모듈
+const multers3 = require('multer-s3');
+const AWS = require('aws-sdk');
 const path = require('path');
 
-try {
-  fs.accessSync('uploads');
-} catch (error) {
-  console.log('uploads 폴더가 없으므로 생성합니다.');
-  fs.mkdirSync('uploads');
-}
-
-const upload = multer({
-  storage: diskStorage({  // 어디에 저장할 것인가? 일단은 하드디스크
-    destination(req, file, done) {
-      done(null, 'uploads');   // 업로즈 폴더에...
-    },
-    filename(req, file, done) {  
-      const filename = path.basename(file.originalname);  // 비오.png
-      done(null, `${Date.now()}_${filename}`); // 시간스탬프_비오.png
+AWS.config.update({
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+  region: 'ap-northeast-2',
+});
+const uploadPost = multer({
+  storage: multers3({  
+    s3: new AWS.S3(),
+    bucket: 'biiogram',
+    key(req, file, cb) {
+      cb(null, `original/post/${Date.now()}_${path.basename(file.originalname)}`)
+    }
+  }),
+  limits: { fileSize: 20 * 1024 * 1024 }, // 용량제한 20Mb
+});
+const uploadAvatar = multer({
+  storage: multers3({  
+    s3: new AWS.S3(),
+    bucket: 'biiogram',
+    key(req, file, cb) {
+      cb(null, `original/avatar/${Date.now()}_${path.basename(file.originalname)}`)
     }
   }),
   limits: { fileSize: 20 * 1024 * 1024 }, // 용량제한 20Mb
 });
 
-router.post('/', upload.array('image'), async (req, res, next) => { // POST /images
+router.post('/post', uploadPost.array('image'), async (req, res, next) => { // POST /images/post
   try {
     const { files } = req;
-    res.status(200).json(files.map(file => file.filename));
+    res.status(200).json(files.map(file => file.location));
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post('/avatar', uploadAvatar.array('image'), async (req, res, next) => { // POST /images/avatar
+  try {
+    const { files } = req;
+    res.status(200).json(files.map(file => file.location));
   } catch (error) {
     console.error(error);
     next(error);

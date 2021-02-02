@@ -1,13 +1,18 @@
 import axios from 'axios';
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
-import { uploadImagesRequest, uploadImagesSuccess, uploadImagesFail } from './imageSlice';
+import {
+  uploadImagesSuccess,
+  uploadImagesFail,
+  uploadPostImagesRequest,
+  uploadAvatarImageRequest,
+} from './imageSlice';
 
-function uploadImagesAPI(data) {
-  return axios.post('/images', data);
+function uploadPostImagesAPI(data) {
+  return axios.post('/images/post', data);
 }
-function* uploadImages({ payload }) {
+function* uploadPostImages({ payload }) {
   try {
-    const result = yield call(uploadImagesAPI, payload);
+    const result = yield call(uploadPostImagesAPI, payload);
     yield put(uploadImagesSuccess(result.data));
   } catch (err) {
     console.log(err);
@@ -15,9 +20,25 @@ function* uploadImages({ payload }) {
   }
 }
 
-export function* watchUploadImages() {
-  yield takeLatest(uploadImagesRequest, uploadImages);
+function uploadAvatarImageAPI(data) {
+  return axios.post('/images/avatar', data);
+}
+function* uploadAvatarImage({ payload }) {
+  try {
+    const result = yield call(uploadAvatarImageAPI, payload);
+    yield put(uploadImagesSuccess(result.data));
+  } catch (err) {
+    console.log(err);
+    yield put(uploadImagesFail(err));
+  }
+}
+
+export function* watchUploadPostImages() {
+  yield takeLatest(uploadPostImagesRequest, uploadPostImages);
+}
+export function* watchUploadAvatarImage() {
+  yield takeLatest(uploadAvatarImageRequest, uploadAvatarImage);
 }
 export default function* imageSaga() {
-  yield all([fork(watchUploadImages)]);
+  yield all([fork(watchUploadPostImages), fork(watchUploadAvatarImage)]);
 }

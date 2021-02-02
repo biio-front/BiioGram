@@ -18,7 +18,7 @@ const EditProfile = () => {
   const { imagePaths } = useSelector((state) => state.image);
   const dispatch = useDispatch();
 
-  const [onFileChange, imageInput, onImageUpload] = useUploadImages();
+  const [onFileChange, imageInput, onImageUpload] = useUploadImages('avatar');
   const [nickname, onChangeNickname] = useInput(me?.nickname);
   const [desc, onChangeDesc] = useInput(me?.desc || '');
 
@@ -82,7 +82,7 @@ const EditProfile = () => {
             <s.Button
               type="submit"
               content="수정사항 저장하기"
-              color="teal"
+              color="pink"
               loading={editProfileLoading}
             />
           </div>

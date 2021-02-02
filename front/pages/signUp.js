@@ -12,7 +12,7 @@ import wrapper from '../store/configureStore';
 import axios from 'axios';
 import { END } from 'redux-saga';
 
-const SignUp = () => {
+const Signup = () => {
   const { me, signUpLoading, signUpError, signUpDone } = useSelector(
     (state) => state.user,
   );
@@ -66,7 +66,7 @@ const SignUp = () => {
           {signUpError && <s.Error>이미 사용중인 이메일입니다.</s.Error>}
           <Input
             type="text"
-            placeholder={'사용자이름'}
+            placeholder={'이름'}
             onChange={onChangeNickname}
             size="small"
           />
@@ -94,7 +94,7 @@ const SignUp = () => {
               size="small"
               type="submit"
               content="가입하기"
-              color="teal"
+              color="pink"
               loading={signUpLoading}
             />
           </div>
@@ -132,4 +132,4 @@ export const getServerSideProps = wrapper.getServerSideProps(async (context) => 
   context.store.dispatch(END);
   await context.store.sagaTask.toPromise();
 });
-export default SignUp;
+export default Signup;

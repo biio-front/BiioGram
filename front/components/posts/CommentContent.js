@@ -9,6 +9,7 @@ import Avatar from '../common/Avatar';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
+import { StyleDate } from '../common/style';
 
 dayjs.extend(relativeTime);
 dayjs.locale('ko');
@@ -33,42 +34,35 @@ const CommentContent = ({
     <>
       <List.Item>
         <Link href={`/profile/${userId}`}>
-          <sc.a>
+          <s.a>
             <Avatar src={avatar} size="28" />
-          </sc.a>
+          </s.a>
         </Link>
-        <sc.Content>
+        <s.Content>
           <List.Header>
             {nickname}
-            <sc.date>{dayjs().to(dayjs(createdAt))}</sc.date>
+            <StyleDate>{dayjs().to(dayjs(createdAt))}</StyleDate>
           </List.Header>
           <p>{content}</p>
-          {userId === me.id && <sc.remove name="delete" color="red" onClick={onRemove} />}
-        </sc.Content>
+          {userId === me.id && <s.remove name="delete" color="red" onClick={onRemove} />}
+        </s.Content>
       </List.Item>
     </>
   );
 };
 
-export const sc = {};
-sc.a = styled.a`
+const s = {};
+s.a = styled.a`
   float: left;
   margin-right: 10px;
 `;
-sc.date = styled.span`
-  font-size: 0.85rem;
-  font-weight: lighter;
-  margin-left: 10px;
-  margin-bottom: 0;
-  color: #aaa;
-`;
-sc.Content = styled(List.Content)`
+s.Content = styled(List.Content)`
   position: relative;
   & p {
     margin-bottom: 0;
   }
 `;
-sc.remove = styled(List.Icon)`
+s.remove = styled(List.Icon)`
   cursor: pointer;
   position: absolute;
   top: 0;

@@ -22,14 +22,14 @@ const NavMenu = () => {
 
   return (
     <DropDownMenu top="64px">
-      <Link href={me?.id ? `/profile/${me.id}` : '/auth'}>
+      <Link href={me?.id ? `/profile/${me.id}` : '/'}>
         <a>
           <List.Item onClick={!me?.id ? onNeedLogin : undefined}>
             <Icon name="user circle" /> 프로필
           </List.Item>
         </a>
       </Link>
-      <Link href={me?.id ? '/profile/edit' : '/auth'}>
+      <Link href={me?.id ? '/profile/edit' : '/'}>
         <a>
           <List.Item onClick={!me?.id ? onNeedLogin : undefined}>
             <Icon name="setting" /> 프로필 설정

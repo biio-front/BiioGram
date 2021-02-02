@@ -13,7 +13,7 @@ import { onNeedLogin } from '../common/onNeedLogin';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ko';
-import { sc } from './CommentContent';
+import { StyleDate } from '../common/style';
 
 dayjs.extend(relativeTime);
 dayjs.locale('ko');
@@ -63,7 +63,7 @@ const PostCard = ({ user, content, Images, comments, postId, Likers, createdAt }
 
       {/* 포스트 내용 */}
       <PostCardContent nickname={user.nickname} content={content} />
-      <sc.date>{dayjs().to(dayjs(createdAt))}</sc.date>
+      <StyleDate>{dayjs().to(dayjs(createdAt))}</StyleDate>
 
       {/* 덧글 */}
       <Comment

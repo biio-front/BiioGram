@@ -27,7 +27,7 @@ const AppLayout = ({ children }) => {
             </Link>
           </Header>
           <div className="menu">
-            <Link href={me?.id ? '/post/create' : '/auth'}>
+            <Link href={me?.id ? '/post/create' : '/'}>
               <a>
                 <Icon
                   name="plus"

@@ -90,6 +90,7 @@ router.get('/:userId', async (req, res, next) => { // GET /user/1/
     const user = await User.findOne({ 
       where: { id: userId },
       attributes: ['nickname', 'desc', 'avatar'],
+      order: [[Post, 'createdAt', 'DESC']],
       include: [{
         model: User,
         as: 'Followings',

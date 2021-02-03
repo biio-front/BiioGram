@@ -40,7 +40,7 @@ app.use(express.urlencoded({extended: true}));
 
 // set the cors
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3050', 'http://biiogram.ga'],
+  origin: ['http://localhost:3000', 'http://localhost:3050', 'https://biiogram.ga'],
   credentials: true,
 }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -51,7 +51,7 @@ app.use(session({
   secret: process.env.COOKIE_SECRET, 
   cookie: {
     httpOnly: true, 
-    secure: false, 
+    secure: true, 
     domain: process.env.NODE_ENV === 'production' && '.biiogram.ga'
   }
 }));
@@ -73,6 +73,6 @@ app.use('/posts', postsRouter);
 app.use('/images', imagesRouter);
 app.use('/hashtag', hashtagRouter);
 
-app.listen(80, () => {
+app.listen(3055, () => {
   console.log('서버 실행중');
 });

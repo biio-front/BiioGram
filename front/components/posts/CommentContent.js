@@ -33,7 +33,7 @@ const CommentContent = ({
   return (
     <>
       <List.Item>
-        <Link href={`/profile/${userId}`}>
+        <Link href={`/profile/${userId}`} prefetch={false}>
           <s.a>
             <Avatar src={avatar} size="28" />
           </s.a>

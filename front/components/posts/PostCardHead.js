@@ -30,7 +30,7 @@ const PostCardHead = ({ userId, nickname, avatar, postId }) => {
     <s.Grid style={style}>
       <Grid.Row verticalAlign="middle">
         <Grid.Column width={10}>
-          <Link href={`/profile/${userId}`}>
+          <Link href={`/profile/${userId}`} prefetch={false}>
             <a>
               <Avatar
                 src={

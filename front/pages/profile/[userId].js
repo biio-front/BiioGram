@@ -32,7 +32,7 @@ const Profile = () => {
       <AppLayout>
         <s.profile>
           <ProfileHead
-            avatar={user?.avatar}
+            avatar={me.id === +userId ? me.avatar : user?.avatar}
             nickname={user?.nickname}
             edit={parseInt(userId, 10) === me?.id ? '수정하기' : null}
           >

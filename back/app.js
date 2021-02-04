@@ -47,11 +47,12 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
   saveUninitialized: false, 
   resave: false, 
+  proxy: process.env.NODE_ENV === 'production',
   name: 'userSession',
   secret: process.env.COOKIE_SECRET, 
   cookie: {
     httpOnly: true, 
-    secure: true, 
+    secure: process.env.NODE_ENV === 'production', 
     domain: process.env.NODE_ENV === 'production' && '.biiogram.ga'
   }
 }));

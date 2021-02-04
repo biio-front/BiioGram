@@ -66,6 +66,7 @@ router.post('/login', isNotLoggedIn, async (req, res, next) => { // POST /user/l
 router.delete('/logout', isLoggedIn, (req, res) => { // DELETE /user/logout
   req.logout();
   res.status(200).send('logout');
+  res.clearCookie('userSession');
 });
 
 module.exports = router;

@@ -32,9 +32,9 @@ const Profile = () => {
       <AppLayout>
         <s.profile>
           <ProfileHead
-            avatar={me.id === +userId ? me.avatar : user?.avatar}
-            nickname={user?.nickname}
-            edit={parseInt(userId, 10) === me?.id ? '수정하기' : null}
+            avatar={me?.id === +userId ? me.avatar : user?.avatar}
+            nickname={me?.id === +userId ? me.nickname : user?.nickname}
+            edit={me?.id === +userId ? '수정하기' : null}
           >
             {/* 프로필 상단 오른쪽 */}
             <s.List horizontal>
@@ -48,7 +48,7 @@ const Profile = () => {
                 <ListModal list={user?.Followings || []} title="팔로우" />
               </List.Item>
             </s.List>
-            <p>{user?.desc}</p>
+            <p>{me?.id === +userId ? me.desc : user?.desc}</p>
           </ProfileHead>
 
           {/* 내가 쓴 게시글 보기 */}
